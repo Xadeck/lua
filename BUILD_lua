@@ -16,4 +16,5 @@ cc_library(
     ],
     copts = ["-w"],  # inhibit all warning messages
     includes = ["lua-5.3.5/src"],
+    visibility = ["//visibility:public"],
 )
