@@ -6,6 +6,7 @@ cc_library(
     name = "state",
     srcs = ["state.cc"],
     hdrs = ["state.h"],
+    include_prefix = "xdk/lua",
     deps = ["@lua"],
 )
 

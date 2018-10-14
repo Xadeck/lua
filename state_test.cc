@@ -1,7 +1,8 @@
-#include "state.h"
+#include "xdk/lua/state.h"
 #include "gtest/gtest.h"
 
 namespace xdk {
+namespace lua {
 namespace {
 
 void *FailingAllocator(void *ud, void *ptr, size_t osize, size_t nsize) {
@@ -36,4 +37,5 @@ TEST(StateTest, AllocatorIsInvoked) {
 }
 
 } // namespace
+} // namespace lua
 } // namespace xdk

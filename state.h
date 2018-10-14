@@ -5,6 +5,7 @@
 #include <memory>
 
 namespace xdk {
+namespace lua {
 class State final {
   using Ptr = std::unique_ptr<lua_State, void (*)(lua_State *)>;
 
@@ -16,6 +17,7 @@ private:
   State(Ptr ptr) : ptr_(std::move(ptr)) {}
   const Ptr ptr_;
 };
+} // namespace lua
 } // namespace xdk
 
 #endif
