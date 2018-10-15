@@ -29,7 +29,10 @@ cc_library(
             "lua-5.3.5/src/*.c",
             "lua-5.3.5/src/*.h",
         ],
-        exclude = ["lua-5.3.5/src/luac.c"],
+        exclude = [
+            "lua-5.3.5/src/lua.c",
+            "lua-5.3.5/src/luac.c",
+        ],
     ),
     hdrs = [
         "lua-5.3.5/src/lauxlib.h",
