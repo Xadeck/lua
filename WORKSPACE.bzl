@@ -14,7 +14,7 @@ def dependencies():
     )
 
     git_repository(
-        name = "com_github_abseil_abseil_cpp",
+        name = "com_google_absl",
         remote = "https://github.com/abseil/abseil-cpp.git",
         tag = "20180600",
     )
