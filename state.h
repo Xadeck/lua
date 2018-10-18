@@ -7,15 +7,14 @@
 namespace xdk {
 namespace lua {
 class State final {
-  using Ptr = std::unique_ptr<lua_State, void (*)(lua_State *)>;
-
 public:
-  static Ptr New(lua_Alloc alloc = nullptr, void *ud = nullptr);
+  State(lua_Alloc alloc = nullptr, void *ud = nullptr);
   operator lua_State *() const { return ptr_.get(); }
 
 private:
-  State(Ptr ptr) : ptr_(std::move(ptr)) {}
-  const Ptr ptr_;
+  State(lua_State *L);
+
+  const std::unique_ptr<lua_State, void (*)(lua_State *)> ptr_;
 };
 } // namespace lua
 } // namespace xdk

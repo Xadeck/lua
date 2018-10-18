@@ -1,4 +1,5 @@
 #include "xdk/lua/state.h"
+
 #include "gtest/gtest.h"
 
 namespace xdk {
@@ -10,7 +11,10 @@ void *FailingAllocator(void *ud, void *ptr, size_t osize, size_t nsize) {
 }
 
 void *InstrumentedAllocator(void *ud, void *ptr, size_t osize, size_t nsize) {
-  (*reinterpret_cast<std::function<void()> *>(ud))();
+  int *const n = reinterpret_cast<int *>(ud);
+  *n -= (ptr ? 1 : 0) * osize;
+  *n += nsize;
+
   if (nsize == 0) {
     free(ptr);
     return nullptr;
@@ -18,22 +22,43 @@ void *InstrumentedAllocator(void *ud, void *ptr, size_t osize, size_t nsize) {
   return realloc(ptr, nsize);
 }
 
-TEST(StateTest, CanBeAllocatedSimply) {
-  auto L = State::New();
+TEST(StateTest, CanBeAllocatedAndUsedSimply) {
+  State L;
   ASSERT_NE(L, nullptr);
+  ASSERT_EQ(lua_gettop(L), 0);
+  lua_pushinteger(L, 1);
+  ASSERT_EQ(lua_gettop(L), 1);
 }
 
 TEST(StateTest, ReturnsNullIfCannotBeAllocated) {
-  auto L = State::New(FailingAllocator);
+  State L(FailingAllocator);
   ASSERT_EQ(L, nullptr);
 }
 
 TEST(StateTest, AllocatorIsInvoked) {
   int n = 0;
-  std::function<void()> instrumentation = [&n]() { ++n; };
-  auto L = State::New(InstrumentedAllocator, &instrumentation);
-  ASSERT_NE(L, nullptr);
-  ASSERT_EQ(n, 54);
+  {
+    State L(InstrumentedAllocator, &n);
+    ASSERT_NE(L, nullptr);
+    // Some memory has been allocated for the state.
+    EXPECT_GT(n, 0);
+    // Pushing a (long enough) string will allocate more.
+    int n0 = n;
+    lua_pushstring(L, "a long enough string");
+    EXPECT_LT(n, n0);
+  }
+  // Once state goes out of scope, all memory is freed.
+  EXPECT_EQ(n, 0);
+}
+
+TEST(StateTest, StateCanBeMoved) {
+  auto func = [](State &&L) {
+    EXPECT_EQ(lua_gettop(L), 0);
+    lua_pushinteger(L, 5);
+    EXPECT_EQ(lua_gettop(L), 1);
+  };
+  State L;
+  func(std::move(L));
 }
 
 } // namespace
