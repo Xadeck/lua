@@ -6,6 +6,7 @@ cc_library(
     name = "state",
     srcs = ["state.cc"],
     hdrs = ["state.h"],
+    copts = ["-Werror"],
     include_prefix = "xdk/lua",
     deps = ["@lua"],
 )
@@ -23,6 +24,7 @@ cc_library(
     name = "sandbox",
     srcs = ["sandbox.cc"],
     hdrs = ["sandbox.h"],
+    copts = ["-Werror"],
     include_prefix = "xdk/lua",
     deps = ["@lua"],
 )
