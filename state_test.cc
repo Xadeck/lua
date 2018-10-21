@@ -61,6 +61,11 @@ TEST(StateTest, StateCanBeMoved) {
   func(std::move(L));
 }
 
+TEST(StateTest, StateCanBeMoveAssigned) {
+  auto L = State();
+  ASSERT_EQ(lua_gettop(L), 0);
+}
+
 } // namespace
 } // namespace lua
 } // namespace xdk
