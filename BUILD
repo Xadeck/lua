@@ -38,3 +38,25 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "stack",
+    srcs = ["stack.cc"],
+    hdrs = ["stack.h"],
+    copts = ["-Werror"],
+    include_prefix = "xdk/lua",
+    deps = [
+        "@com_google_absl//absl/strings",
+        "@lua",
+    ],
+)
+
+cc_test(
+    name = "stack_test",
+    srcs = ["stack_test.cc"],
+    deps = [
+        ":stack",
+        ":state",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
