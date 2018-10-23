@@ -23,12 +23,12 @@ namespace lua {
 
 // Takes the table on the top of the stack, and creates a sandbox. Returns a
 // reference that can be used by lua_getsandbox() to retrieve that sandbox.
-int lua_newsandbox(lua_State *L);
+int newsandbox(lua_State *L);
 // Retrieve a sandbox that was created by lua_newsandbox(L).
-void lua_getsandbox(lua_State *L, int sandbox);
+void getsandbox(lua_State *L, int sandbox);
 // Frees the reference held by sandbox. After that, calling lua_getsandbox()
 // will return nil.
-void lua_closesandbox(lua_State *L, int sandbox);
+void closesandbox(lua_State *L, int sandbox);
 
 } // namespace lua
 } // namespace xdk

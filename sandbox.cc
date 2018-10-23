@@ -3,7 +3,7 @@
 namespace xdk {
 namespace lua {
 
-int lua_newsandbox(lua_State *L) {
+int newsandbox(lua_State *L) {
   // Create an empty table. That's where every lookup/assignment done by a
   // function which has the sandbox as its environment will happen.
   lua_newtable(L);
@@ -25,11 +25,11 @@ int lua_newsandbox(lua_State *L) {
   return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
-void lua_getsandbox(lua_State *L, int sandbox) {
+void getsandbox(lua_State *L, int sandbox) {
   lua_rawgeti(L, LUA_REGISTRYINDEX, sandbox);
 }
 
-void lua_closesandbox(lua_State *L, int sandbox) {
+void closesandbox(lua_State *L, int sandbox) {
   luaL_unref(L, LUA_REGISTRYINDEX, sandbox);
 }
 
