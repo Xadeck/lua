@@ -7,26 +7,22 @@
 namespace xdk {
 namespace lua {
 
-class Stack final {
-public:
-  static Stack Debug(lua_State *L);
-  static Stack Values(lua_State *L);
+struct Stack {
+  explicit Stack(lua_State *L) : L(L) {}
 
-private:
-  friend std::ostream &operator<<(std::ostream &os,
-                                  const ::xdk::lua::Stack &debug);
-  Stack(lua_State *L, bool show_header, bool show_type, const char *separator)
-      : L_(L), show_header_(show_header), show_type_(show_type),
-        separator_(separator) {}
-  lua_State *const L_;
-  const bool show_header_;
-  const bool show_type_;
-  const char *const separator_;
+  struct Element {
+    Element(lua_State *L, int index) : L(L), index(index) {}
+    lua_State *const L;
+    const int index;
+  };
+
+  lua_State *const L;
 };
+
+std::ostream &operator<<(std::ostream &os, const Stack::Element &element);
+std::ostream &operator<<(std::ostream &os, const Stack &stack);
 
 } // namespace lua
 } // namespace xdk
-
-// std::ostream &operator<<(std::ostream &os, const ::xdk::lua::Stack &debug);
 
 #endif

@@ -19,22 +19,23 @@ protected:
   State L;
 };
 
-TEST_F(StackTest, DebugWorks) {
+TEST_F(StackTest, StackElementIsStreamable) {
   std::ostringstream os;
-  os << Stack::Debug(L);
-  ASSERT_EQ(os.str(), R"(---
- -6:     nil=nil
- -5:   table={...}
- -4:  number=3
- -3:  number=1.2
- -2:  string="some \"quoted\" text"
- -1: boolean=true)");
+  os << Stack::Element(L, 1);
+  EXPECT_EQ(os.str(), "  1 [nil    ] ");
 }
 
-TEST_F(StackTest, ValuesWorks) {
+TEST_F(StackTest, StackIsStreamable) {
   std::ostringstream os;
-  os << Stack::Values(L);
-  ASSERT_EQ(os.str(), R"(nil, {...}, 3, 1.2, "some \"quoted\" text", true)");
+  os << Stack(L);
+  EXPECT_EQ(os.str(), R"(---
+  1 [nil    ] 
+  2 [table  ] {...}
+  3 [number ] 3
+  4 [number ] 1.2
+  5 [string ] "some \"quoted\" text"
+  6 [boolean] true
+)");
 }
 
 } // namespace

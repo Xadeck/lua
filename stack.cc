@@ -7,51 +7,40 @@
 namespace xdk {
 namespace lua {
 
-Stack Stack::Debug(lua_State *L) { return Stack(L, true, true, "\n"); }
-Stack Stack::Values(lua_State *L) { return Stack(L, false, false, ", "); }
-
-std::ostream &operator<<(std::ostream &os, const ::xdk::lua::Stack &stack) {
-  lua_State *L = stack.L_;
-  if (stack.show_header_) {
-    os << "---\n";
+std::ostream &operator<<(std::ostream &os, const Stack::Element &element) {
+  lua_State *L = element.L;
+  int index = element.index;
+  os << std::setw(3) << std::right << index << " [" << std::setw(7) << std::left
+     << lua_typename(L, lua_type(L, index)) << "] ";
+  switch (lua_type(L, index)) {
+  case LUA_TNIL:
+    return os;
+  case LUA_TNUMBER:
+    return os << lua_tonumber(L, index);
+  case LUA_TBOOLEAN:
+    return os << (lua_toboolean(L, index) ? "true" : "false");
+  case LUA_TSTRING:
+    return os << '"' << absl::CEscape(lua_tostring(L, index)) << '"';
+  case LUA_TTABLE:
+    return os << "{...}";
+  case LUA_TFUNCTION:
+    return os << "fn";
+  case LUA_TUSERDATA:
+    return os << lua_touserdata(L, index);
+  case LUA_TTHREAD:
+    return os << lua_tothread(L, index);
+  case LUA_TLIGHTUSERDATA:
+    return os << lua_touserdata(L, index);
   }
-  for (int i = -lua_gettop(L); i < 0; ++i) {
-    if (stack.show_type_) {
-      os << std::setw(3) << i << ':' << std::setw(8)
-         << lua_typename(L, lua_type(L, i)) << "=";
-    }
-    switch (lua_type(L, i)) {
-    case LUA_TNIL:
-      os << "nil";
-      break;
-    case LUA_TNUMBER:
-      os << lua_tonumber(L, i);
-      break;
-    case LUA_TBOOLEAN:
-      os << (lua_toboolean(L, i) ? "true" : "false");
-      break;
-    case LUA_TSTRING:
-      os << '"' << absl::CEscape(lua_tostring(L, i)) << '"';
-      break;
-    case LUA_TTABLE:
-      os << "{...}";
-      break;
-    case LUA_TFUNCTION:
-      os << "fn";
-      break;
-    case LUA_TUSERDATA:
-      os << lua_touserdata(L, i);
-      break;
-    case LUA_TTHREAD:
-      os << lua_tothread(L, i);
-      break;
-    case LUA_TLIGHTUSERDATA:
-      os << lua_touserdata(L, i);
-      break;
-    }
-    if (i != -1) {
-      os << stack.separator_;
-    }
+  return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const Stack &stack) {
+  lua_State *L = stack.L;
+  os << "---\n";
+  for (int index = 1; index <= lua_gettop(L); ++index) {
+    os << Stack::Element(L, index);
+    os << '\n';
   }
   return os;
 }

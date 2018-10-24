@@ -68,3 +68,29 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "matchers",
+    testonly = 1,
+    hdrs = ["matchers.h"],
+    copts = COPTS,
+    include_prefix = "xdk/lua",
+    deps = [
+        ":stack",
+        "//matchers:element",
+        "//matchers:is_number",
+        "@com_google_googletest//:gtest",
+        "@lua",
+    ],
+)
+
+cc_test(
+    name = "matchers_test",
+    srcs = ["matchers_test.cc"],
+    copts = COPTS,
+    deps = [
+        ":matchers",
+        ":state",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
