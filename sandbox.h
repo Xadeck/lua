@@ -30,6 +30,20 @@ void getsandbox(lua_State *L, int sandbox);
 // will return 0.
 void closesandbox(lua_State *L, int sandbox);
 
+// Use RAI to easily create a scoped sandbox.
+class Sandbox {
+public:
+  Sandbox(lua_State *L, int index) : L_(L), sandbox_(newsandbox(L, index)) {
+    getsandbox(L_, sandbox_);
+  }
+
+  ~Sandbox() { closesandbox(L_, sandbox_); }
+
+private:
+  lua_State *const L_;
+  const int sandbox_;
+};
+
 } // namespace lua
 } // namespace xdk
 

@@ -204,6 +204,30 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
   }
 }
 
+TEST_F(SandboxTest, SandboxHelperWorks) {
+  // Create a scoped sandboxed.
+  {
+    Sandbox sandbox(L, -1);
+    // Checks we can access 'x' from the base.
+    lua_getfield(L, -1, "x");
+    ASSERT_TRUE(lua_isnumber(L, -1));
+    ASSERT_EQ(lua_tonumber(L, -1), 3);
+    lua_pop(L, 1);
+    // Checks we can set it to a different value.
+    lua_pushnumber(L, 4);
+    lua_setfield(L, -2, "x");
+    // If we access it, we get the new value.
+    lua_getfield(L, -1, "x");
+    ASSERT_EQ(lua_tonumber(L, -1), 4);
+    lua_pop(L, 1);
+    lua_pop(L, 1);
+  }
+  // When sandbox is out of scope, trying to
+  // get x yields the old value.
+  lua_getfield(L, -1, "x");
+  ASSERT_EQ(lua_tonumber(L, -1), 3);
+}
+
 } // namespace
 } // namespace lua
 } // namespace xdk
