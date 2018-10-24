@@ -2,7 +2,8 @@
 #define XDK_LUA_STACK_H
 
 #include <iostream>
-#include <lua.hpp>
+
+#include "xdk/lua/lua.hpp"
 
 namespace xdk {
 namespace lua {

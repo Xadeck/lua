@@ -37,6 +37,8 @@ cc_library(
     ],
     copts = ["-w"],  # inhibit all warning messages
     includes = ["lua-5.3.5/src"],
+    strip_include_prefix = "lua-5.3.5/src",
+    include_prefix = "xdk/lua",
     visibility = ["//visibility:public"],
 )
         """,

@@ -1,7 +1,7 @@
 #ifndef XDK_LUA_SANDBOX_H_
 #define XDK_LUA_SANDBOX_H_
 
-#include "lua.hpp"
+#include "xdk/lua/lua.hpp"
 
 namespace xdk {
 namespace lua {

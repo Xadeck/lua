@@ -1,8 +1,9 @@
 #ifndef XDK_LUA_STATE_H
 #define XDK_LUA_STATE_H
 
-#include <lua.hpp>
 #include <memory>
+
+#include "xdk/lua/lua.hpp"
 
 namespace xdk {
 namespace lua {
