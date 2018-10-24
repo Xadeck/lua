@@ -1,11 +1,8 @@
+load("//:WORKSPACE.bzl", "COPTS")
+
 package(
     default_visibility = ["//visibility:public"],
 )
-
-COPTS = [
-    "-Wall",
-    "-Werror",
-]
 
 cc_library(
     name = "state",
