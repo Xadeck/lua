@@ -23,12 +23,29 @@ protected:
 
 TEST_F(SandboxTest, DoesNotChangeStack) {
   ASSERT_EQ(lua_gettop(L), 1);
-  (void)newsandbox(L);
+  (void)newsandbox(L, -1);
   ASSERT_EQ(lua_gettop(L), 1);
 }
 
+TEST_F(SandboxTest, CanBeCreatedAtAnyIndex) {
+  lua_pushliteral(L, "filling the stack");
+  lua_pushliteral(L, "so table is at -3");
+  // Test the sandbox can be created on the table
+  // using both relative and absolute indices.
+  for (int index : {-3, 1}) {
+    SCOPED_TRACE(index);
+    int sandbox = newsandbox(L, -3);
+    getsandbox(L, sandbox);
+    lua_getfield(L, -1, "x");
+    ASSERT_TRUE(lua_isnumber(L, -1));
+    ASSERT_EQ(lua_tonumber(L, -1), 3);
+    lua_pop(L, 2);
+    closesandbox(L, sandbox);
+  }
+}
+
 TEST_F(SandboxTest, CanBeRetrieved) {
-  int sandbox = newsandbox(L);
+  int sandbox = newsandbox(L, -1);
   getsandbox(L, sandbox);
   ASSERT_EQ(lua_gettop(L), 2);
   ASSERT_TRUE(lua_istable(L, -1));
@@ -40,7 +57,7 @@ TEST_F(SandboxTest, CanBeRetrieved) {
 }
 
 TEST_F(SandboxTest, HasNoStandardFunctions) {
-  int sandbox = newsandbox(L);
+  int sandbox = newsandbox(L, -1);
 
   for (const char *name : {"require", "print", "setmetatable", "getmetatable",
                            "rawset", "rawget"}) {
@@ -53,7 +70,7 @@ TEST_F(SandboxTest, HasNoStandardFunctions) {
 }
 
 TEST_F(SandboxTest, BaseFieldsCanBeAccessedAndOverridden) {
-  int sandbox = newsandbox(L);
+  int sandbox = newsandbox(L, -1);
   getsandbox(L, sandbox);
   // Checks we can access 'x' from the base.
   lua_getfield(L, -1, "x");
@@ -79,7 +96,7 @@ TEST_F(SandboxTest, BaseTablesAreModifiable) {
   lua_newtable(L);
   lua_setfield(L, -2, "data");
   // Create a sandbox, access base 'data' and set y=5 in it.
-  int sandbox = newsandbox(L);
+  int sandbox = newsandbox(L, -1);
   getsandbox(L, sandbox);
   lua_getfield(L, -1, "data");
   lua_pushnumber(L, 5);
@@ -93,7 +110,7 @@ TEST_F(SandboxTest, BaseTablesAreModifiable) {
 }
 
 TEST_F(SandboxTest, WorksAsChunkEnvironment) {
-  int sandbox = newsandbox(L);
+  int sandbox = newsandbox(L, -1);
   // Loads a chunk of code.
   const char source[] = "x = x + 5";
   ASSERT_EQ(luaL_loadstring(L, source), 0);
@@ -119,7 +136,7 @@ int Source(lua_State *L) {
 }
 
 TEST_F(SandboxTest, WorksAsClosureEnvironment) {
-  int sandbox = newsandbox(L);
+  int sandbox = newsandbox(L, -1);
   // Pushes a C closure with the sandbox as its upvalue and evaluates it.
   lua_pushnumber(L, sandbox);
   lua_pushcclosure(L, &Source, 1);
@@ -144,7 +161,7 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
   ASSERT_EQ(lua_gettop(L), 1);
   // It is possible to set a field from C code.  with rawset (trying to use
   // setfield would PANIC crash).
-  int sandbox = newsandbox(L);
+  int sandbox = newsandbox(L, -1);
   getsandbox(L, sandbox);
   lua_pushstring(L, "y");
   lua_pushnumber(L, 3);
@@ -176,7 +193,7 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
   // sandboxes. NOTE: This works because metamethod __newindex is propagated.
   {
     getsandbox(L, sandbox);
-    int stacked_sandbox = newsandbox(L);
+    int stacked_sandbox = newsandbox(L, -1);
     const char source[] = "y = 6";
     ASSERT_EQ(luaL_loadstring(L, source), 0);
     getsandbox(L, stacked_sandbox);

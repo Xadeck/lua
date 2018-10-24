@@ -3,7 +3,8 @@
 namespace xdk {
 namespace lua {
 
-int newsandbox(lua_State *L) {
+int newsandbox(lua_State *L, int index) {
+  index = lua_absindex(L, index);
   // Create an empty table. That's where every lookup/assignment done by a
   // function which has the sandbox as its environment will happen.
   lua_newtable(L);
@@ -11,11 +12,11 @@ int newsandbox(lua_State *L) {
   // the stack when the sandbox is created.
   lua_newtable(L);
   lua_pushliteral(L, "__index");
-  lua_pushvalue(L, -4);
+  lua_pushvalue(L, index);
   lua_rawset(L, -3);
   // Copies the __newindex from base, so one can prevent assignment.
   // The sandbox can then also be sandboxed and _newindex will be propagated.
-  lua_getfield(L, -3, "__newindex");
+  lua_getfield(L, index, "__newindex");
   lua_pushliteral(L, "__newindex");
   lua_insert(L, -2);
   lua_rawset(L, -3);

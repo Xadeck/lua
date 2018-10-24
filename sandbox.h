@@ -21,13 +21,13 @@ namespace lua {
 // - is stored in the lua registry for easy retrieval from closure.
 //
 
-// Takes the table on the top of the stack, and creates a sandbox. Returns a
+// Takes the table at `index` on the stack, and creates a sandbox. Returns a
 // reference that can be used by lua_getsandbox() to retrieve that sandbox.
-int newsandbox(lua_State *L);
+int newsandbox(lua_State *L, int index);
 // Retrieve a sandbox that was created by lua_newsandbox(L).
 void getsandbox(lua_State *L, int sandbox);
 // Frees the reference held by sandbox. After that, calling lua_getsandbox()
-// will return nil.
+// will return 0.
 void closesandbox(lua_State *L, int sandbox);
 
 } // namespace lua
