@@ -13,11 +13,11 @@ struct Stack {
 
   struct Element {
     Element(lua_State *L, int index) : L(L), index(index) {}
-    lua_State *const L;
-    const int index;
+    lua_State *L;
+    int index;
   };
 
-  lua_State *const L;
+  lua_State *L;
 };
 
 std::ostream &operator<<(std::ostream &os, const Stack::Element &element);

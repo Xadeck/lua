@@ -8,8 +8,7 @@ namespace xdk {
 namespace lua {
 
 ::testing::Matcher<const Stack &>
-Element(int index,
-        const ::testing::Matcher<const Stack::Element &> &inner_matcher);
+Element(int index, const ::testing::Matcher<const Stack::Element &> &matcher);
 
 }
 } // namespace xdk

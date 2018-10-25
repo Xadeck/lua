@@ -25,6 +25,12 @@ TEST_F(StackTest, StackElementIsStreamable) {
   EXPECT_EQ(os.str(), "  1 [nil    ] ");
 }
 
+TEST_F(StackTest, StackElementOutsideRangeWorks) {
+  std::ostringstream os;
+  os << Stack::Element(L, 13);
+  EXPECT_EQ(os.str(), " 13 [no value] ");
+}
+
 TEST_F(StackTest, StackIsStreamable) {
   std::ostringstream os;
   os << Stack(L);

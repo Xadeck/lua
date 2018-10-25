@@ -76,14 +76,3 @@ cc_library(
         "@lua",
     ],
 )
-
-cc_test(
-    name = "matchers_test",
-    srcs = ["matchers_test.cc"],
-    copts = COPTS,
-    deps = [
-        ":matchers",
-        ":state",
-        "@com_google_googletest//:gtest_main",
-    ],
-)

@@ -1,4 +1,4 @@
-#include "xdk/lua/matchers/is_number.h"
+#include "xdk/lua/matchers/is_string.h"
 #include "xdk/lua/stack.h"
 
 namespace xdk {
@@ -10,20 +10,20 @@ using ::testing::MatcherInterface;
 using ::testing::MatchResultListener;
 
 namespace {
-struct IsNumberMatcher final
+struct IsStringMatcher final
     : public ::testing::MatcherInterface<const Stack::Element &> {
-  const Matcher<lua_Number> matcher;
+  const Matcher<absl::string_view> matcher;
 
-  explicit IsNumberMatcher(const Matcher<lua_Number> &matcher)
+  explicit IsStringMatcher(const Matcher<absl::string_view> &matcher)
       : matcher(matcher) {}
 
   void DescribeTo(std::ostream *os) const final {
-    *os << "is number and ";
+    *os << "is string and ";
     matcher.DescribeTo(os);
   }
 
   void DescribeNegationTo(std::ostream *os) const final {
-    *os << "isn't number or ";
+    *os << "isn't string or ";
     matcher.DescribeNegationTo(os);
   }
 
@@ -35,14 +35,14 @@ struct IsNumberMatcher final
       *result_listener << "\ngettop L: " << std::setw(3) << lua_gettop(L)
                        << '\n';
     }
-    return lua_isnumber(L, index) &&
-           matcher.MatchAndExplain(lua_tonumber(L, index), result_listener);
+    return lua_isstring(L, index) &&
+           matcher.MatchAndExplain(lua_tostring(L, index), result_listener);
   }
 };
 } // namespace
 
-Matcher<const Stack::Element &> IsNumber(const Matcher<lua_Number> &matcher) {
-  return MakeMatcher(new IsNumberMatcher(matcher));
+Matcher<const Stack::Element &> IsString(Matcher<absl::string_view> matcher) {
+  return MakeMatcher(new IsStringMatcher(matcher));
 }
 
 } // namespace lua

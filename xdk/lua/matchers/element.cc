@@ -35,9 +35,9 @@ struct ElementMatcher final : public MatcherInterface<const Stack &> {
 
 } // namespace
 
-Matcher<const Stack &>
-Element(int index, const Matcher<const Stack::Element &> &inner_matcher) {
-  return MakeMatcher(new ElementMatcher(index, inner_matcher));
+Matcher<const Stack &> Element(int index,
+                               const Matcher<const Stack::Element &> &matcher) {
+  return MakeMatcher(new ElementMatcher(index, matcher));
 }
 
 } // namespace lua
