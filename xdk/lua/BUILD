@@ -71,8 +71,22 @@ cc_library(
     deps = [
         ":stack",
         "//xdk/lua/matchers:element",
+        "//xdk/lua/matchers:has_field",
         "//xdk/lua/matchers:is_number",
+        "//xdk/lua/matchers:is_string",
         "@com_google_googletest//:gtest",
         "@lua",
+    ],
+)
+
+cc_test(
+    name = "matchers_test",
+    srcs = ["matchers_test.cc"],
+    copts = COPTS,
+    deps = [
+        ":matchers",
+        ":stack",
+        ":state",
+        "@com_google_googletest//:gtest",
     ],
 )

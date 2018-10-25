@@ -48,6 +48,30 @@ cc_test(
 )
 
 cc_library(
+    name = "has_field",
+    testonly = 1,
+    srcs = ["has_field.cc"],
+    hdrs = ["has_field.h"],
+    copts = COPTS,
+    deps = [
+        "//xdk/lua:stack",
+        "@com_google_absl//absl/strings",
+        "@com_google_googletest//:gtest",
+    ],
+)
+
+cc_test(
+    name = "has_field_test",
+    srcs = ["has_field_test.cc"],
+    deps = [
+        ":has_field",
+        ":is_number",
+        "//xdk/lua:state",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "element",
     testonly = 1,
     srcs = ["element.cc"],

@@ -26,21 +26,21 @@ TEST_F(IsStringTest, Success) {
   EXPECT_THAT(element, IsString(HasSubstr("sky")));
   EXPECT_THAT(element, IsString(_));
 }
-#ifdef FOO
 TEST_F(IsStringTest, Failure) {
-  lua_pushinteger(L, 3);
+  lua_pushstring(L, "blue sky");
 
   auto element = Stack::Element(L, -1);
-  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(element, IsString("dark ground")),
-                          R"(Expected: is number and is equal to 5)");
-  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(element, Not(IsString("blue sky"))),
-                          R"(Expected: isn't number or isn't equal to 3)");
+  EXPECT_NONFATAL_FAILURE(
+      EXPECT_THAT(element, IsString("dark ground")),
+      R"(Expected: is string and is equal to "dark ground")");
+  EXPECT_NONFATAL_FAILURE(
+      EXPECT_THAT(element, Not(IsString("blue sky"))),
+      R"(Expected: isn't string or isn't equal to "blue sky")");
 
   element = Stack::Element(L, 2);
   EXPECT_NONFATAL_FAILURE(EXPECT_THAT(element, IsString(_)),
                           R"(gettop L:   1)");
 }
-#endif
 
 } // namespace
 } // namespace lua

@@ -8,6 +8,11 @@ namespace xdk {
 namespace lua {
 
 ::testing::Matcher<const Stack::Element &> IsNumber(lua_Number value);
+::testing::Matcher<const Stack::Element &>
+IsString(::testing::Matcher<absl::string_view> matcher);
+
+::testing::Matcher<const Stack::Element &>
+HasField(const char *name, ::testing::Matcher<const Stack::Element &> matcher);
 
 ::testing::Matcher<const Stack &>
 Element(int index,
