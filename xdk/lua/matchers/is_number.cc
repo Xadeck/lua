@@ -35,7 +35,7 @@ struct IsNumberMatcher final
       *result_listener << "\ngettop L: " << std::setw(3) << lua_gettop(L)
                        << '\n';
     }
-    return lua_isnumber(L, index) &&
+    return lua_type(L, index) == LUA_TNUMBER &&
            matcher.MatchAndExplain(lua_tonumber(L, index), result_listener);
   }
 };

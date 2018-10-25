@@ -36,10 +36,14 @@ TEST_F(IsStringTest, Failure) {
   EXPECT_NONFATAL_FAILURE(
       EXPECT_THAT(element, Not(IsString("blue sky"))),
       R"(Expected: isn't string or isn't equal to "blue sky")");
-
+  // Test that when the index is out of range, stack size is printed.
   element = Stack::Element(L, 2);
   EXPECT_NONFATAL_FAILURE(EXPECT_THAT(element, IsString(_)),
                           R"(gettop L:   1)");
+  // Check that the matcher does not work on non-string, even with _.
+  lua_pushnumber(L, 3);
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(Stack::Element(L, -1), IsString(_)),
+                          R"(Actual:  -1 [number ] 3)");
 }
 
 } // namespace

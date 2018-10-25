@@ -35,7 +35,7 @@ struct IsStringMatcher final
       *result_listener << "\ngettop L: " << std::setw(3) << lua_gettop(L)
                        << '\n';
     }
-    return lua_isstring(L, index) &&
+    return lua_type(L, index) == LUA_TSTRING &&
            matcher.MatchAndExplain(lua_tostring(L, index), result_listener);
   }
 };

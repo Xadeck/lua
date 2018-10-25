@@ -37,7 +37,7 @@ struct HasFieldMatcher final
       *result_listener << "\ngettop L: " << std::setw(3) << lua_gettop(L)
                        << '\n';
     }
-    if (!lua_istable(L, index)) {
+    if (lua_type(L, index) != LUA_TTABLE) {
       *result_listener << "\nProblem: element ist not a table\n";
       return false;
     }
