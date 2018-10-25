@@ -56,6 +56,16 @@ TEST_F(HasFieldTest, Failure) {
                           R"(gettop L:   1)");
 }
 
+TEST_F(HasFieldTest, RecursivelyWorks) {
+  lua_newtable(L);
+  lua_newtable(L);
+  lua_pushnumber(L, 3);
+  lua_setfield(L, -2, "x");
+  lua_setfield(L, -2, "p");
+
+  EXPECT_THAT(Stack::Element(L, -1), HasField("p", HasField("x", IsNumber(3))));
+}
+
 } // namespace
 } // namespace lua
 } // namespace xdk

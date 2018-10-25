@@ -98,8 +98,8 @@ TEST_F(SandboxTest, BaseTablesAreModifiable) {
   // Pops 'data' and the sandbox, and check that base has x=5.
   lua_pop(L, 2);
   EXPECT_EQ(lua_gettop(L), 1); // To make sure we check base.
-  lua_getfield(L, -1, "data");
-  ASSERT_THAT(Stack::Element(L, -1), HasField("y", IsNumber(5)));
+  ASSERT_THAT(Stack::Element(L, -1),
+              HasField("data", HasField("y", IsNumber(5))));
 }
 
 TEST_F(SandboxTest, WorksAsChunkEnvironment) {
