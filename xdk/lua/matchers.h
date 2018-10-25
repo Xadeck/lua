@@ -7,7 +7,8 @@
 namespace xdk {
 namespace lua {
 
-::testing::Matcher<const Stack::Element &> IsNumber(lua_Number value);
+::testing::Matcher<const Stack::Element &>
+IsNumber(const ::testing::Matcher<lua_Number> &matcher);
 ::testing::Matcher<const Stack::Element &>
 IsString(::testing::Matcher<absl::string_view> matcher);
 
