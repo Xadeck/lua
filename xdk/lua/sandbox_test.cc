@@ -53,7 +53,7 @@ TEST_F(SandboxTest, CanBeRetrieved) {
   closesandbox(L, sandbox);
   getsandbox(L, sandbox);
   ASSERT_EQ(lua_gettop(L), 3);
-  ASSERT_TRUE(lua_isnil(L, -1));
+  ASSERT_THAT(Stack::Element(L, -1), IsNil());
 }
 
 TEST_F(SandboxTest, HasNoStandardFunctions) {
@@ -61,12 +61,9 @@ TEST_F(SandboxTest, HasNoStandardFunctions) {
 
   for (const char *name : {"require", "print", "setmetatable", "getmetatable",
                            "rawset", "rawget"}) {
-    lua_getfield(L, -1, name);
-    ASSERT_TRUE(lua_isnil(L, -1));
-    lua_pop(L, 1);
+    ASSERT_THAT(Stack::Element(L, -1), HasField(name, IsNil()));
   }
   closesandbox(L, sandbox);
-  ;
 }
 
 TEST_F(SandboxTest, BaseFieldsCanBeAccessedAndOverridden) {

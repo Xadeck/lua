@@ -15,10 +15,13 @@ TEST(Matchers, WrapUp) {
   lua_newtable(L);
   lua_pushinteger(L, 3);
   lua_setfield(L, -2, "threee");
+  lua_pushnil(L);
   EXPECT_THAT(Stack(L), AllOf(Element(1, IsNumber(1)),     //
                               Element(2, IsString("two")), //
-                              Element(3, HasField("three", IsNumber(3)))));
+                              Element(3, HasField("three", IsNumber(3))),
+                              Element(4, IsNil())));
 }
+
 } // namespace
 } // namespace lua
 } // namespace xdk

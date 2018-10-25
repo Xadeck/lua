@@ -17,6 +17,7 @@ cc_library(
 cc_test(
     name = "is_number_test",
     srcs = ["is_number_test.cc"],
+    copts = COPTS,
     deps = [
         ":is_number",
         "//xdk/lua:state",
@@ -40,8 +41,33 @@ cc_library(
 cc_test(
     name = "is_string_test",
     srcs = ["is_string_test.cc"],
+    copts = COPTS,
     deps = [
         ":is_string",
+        "//xdk/lua:state",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "is_nil",
+    testonly = 1,
+    srcs = ["is_nil.cc"],
+    hdrs = ["is_nil.h"],
+    copts = COPTS,
+    deps = [
+        "//xdk/lua:stack",
+        "@com_google_absl//absl/strings",
+        "@com_google_googletest//:gtest",
+    ],
+)
+
+cc_test(
+    name = "is_nil_test",
+    srcs = ["is_nil_test.cc"],
+    copts = COPTS,
+    deps = [
+        ":is_nil",
         "//xdk/lua:state",
         "@com_google_googletest//:gtest_main",
     ],
@@ -63,6 +89,7 @@ cc_library(
 cc_test(
     name = "has_field_test",
     srcs = ["has_field_test.cc"],
+    copts = COPTS,
     deps = [
         ":has_field",
         ":is_number",
@@ -86,6 +113,7 @@ cc_library(
 cc_test(
     name = "element_test",
     srcs = ["element_test.cc"],
+    copts = COPTS,
     deps = [
         ":element",
         ":is_number",

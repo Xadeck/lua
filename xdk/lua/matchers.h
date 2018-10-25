@@ -11,6 +11,7 @@ namespace lua {
 IsNumber(const ::testing::Matcher<lua_Number> &matcher);
 ::testing::Matcher<const Stack::Element &>
 IsString(::testing::Matcher<absl::string_view> matcher);
+::testing::Matcher<const Stack::Element &> IsNil();
 
 ::testing::Matcher<const Stack::Element &>
 HasField(const char *name, ::testing::Matcher<const Stack::Element &> matcher);

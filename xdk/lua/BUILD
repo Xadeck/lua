@@ -53,6 +53,7 @@ cc_library(
         ":stack",
         "//xdk/lua/matchers:element",
         "//xdk/lua/matchers:has_field",
+        "//xdk/lua/matchers:is_nil",
         "//xdk/lua/matchers:is_number",
         "//xdk/lua/matchers:is_string",
         "@com_google_googletest//:gtest",
