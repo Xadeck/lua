@@ -23,25 +23,6 @@ cc_test(
 )
 
 cc_library(
-    name = "sandbox",
-    srcs = ["sandbox.cc"],
-    hdrs = ["sandbox.h"],
-    copts = COPTS,
-    deps = ["@lua"],
-)
-
-cc_test(
-    name = "sandbox_test",
-    srcs = ["sandbox_test.cc"],
-    copts = COPTS,
-    deps = [
-        ":sandbox",
-        ":state",
-        "@com_google_googletest//:gtest_main",
-    ],
-)
-
-cc_library(
     name = "stack",
     srcs = ["stack.cc"],
     hdrs = ["stack.h"],
@@ -88,5 +69,25 @@ cc_test(
         ":stack",
         ":state",
         "@com_google_googletest//:gtest",
+    ],
+)
+
+cc_library(
+    name = "sandbox",
+    srcs = ["sandbox.cc"],
+    hdrs = ["sandbox.h"],
+    copts = COPTS,
+    deps = ["@lua"],
+)
+
+cc_test(
+    name = "sandbox_test",
+    srcs = ["sandbox_test.cc"],
+    copts = COPTS,
+    deps = [
+        ":matchers",
+        ":sandbox",
+        ":state",
+        "@com_google_googletest//:gtest_main",
     ],
 )

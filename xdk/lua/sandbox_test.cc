@@ -1,3 +1,4 @@
+#include "xdk/lua/matchers.h"
 #include "xdk/lua/sandbox.h"
 #include "xdk/lua/state.h"
 
@@ -8,6 +9,7 @@ namespace xdk {
 namespace lua {
 namespace {
 
+using ::testing::_;
 using ::testing::HasSubstr;
 
 class SandboxTest : public testing::Test {
@@ -36,10 +38,8 @@ TEST_F(SandboxTest, CanBeCreatedAtAnyIndex) {
     SCOPED_TRACE(index);
     int sandbox = newsandbox(L, -3);
     getsandbox(L, sandbox);
-    lua_getfield(L, -1, "x");
-    ASSERT_TRUE(lua_isnumber(L, -1));
-    ASSERT_EQ(lua_tonumber(L, -1), 3);
-    lua_pop(L, 2);
+    ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
+    lua_pop(L, 1);
     closesandbox(L, sandbox);
   }
 }
@@ -73,22 +73,16 @@ TEST_F(SandboxTest, BaseFieldsCanBeAccessedAndOverridden) {
   int sandbox = newsandbox(L, -1);
   getsandbox(L, sandbox);
   // Checks we can access 'x' from the base.
-  lua_getfield(L, -1, "x");
-  ASSERT_TRUE(lua_isnumber(L, -1));
-  ASSERT_EQ(lua_tonumber(L, -1), 3);
-  lua_pop(L, 1);
+  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
   // Checks we can set it to a different value.
   lua_pushnumber(L, 4);
   lua_setfield(L, -2, "x");
   // If we access it, we get the new value.
-  lua_getfield(L, -1, "x");
-  ASSERT_EQ(lua_tonumber(L, -1), 4);
-  lua_pop(L, 1);
+  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(4)));
   // But if we pop the sandbox (so the initial table is now on top) and try to
   // get x, then we have the old value.
   lua_pop(L, 1);
-  lua_getfield(L, -1, "x");
-  ASSERT_EQ(lua_tonumber(L, -1), 3);
+  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
 }
 
 TEST_F(SandboxTest, BaseTablesAreModifiable) {
@@ -105,8 +99,7 @@ TEST_F(SandboxTest, BaseTablesAreModifiable) {
   lua_pop(L, 2);
   EXPECT_EQ(lua_gettop(L), 1); // To make sure we check base.
   lua_getfield(L, -1, "data");
-  lua_getfield(L, -1, "y");
-  EXPECT_EQ(lua_tonumber(L, -1), 5);
+  ASSERT_THAT(Stack::Element(L, -1), HasField("y", IsNumber(5)));
 }
 
 TEST_F(SandboxTest, WorksAsChunkEnvironment) {
@@ -119,12 +112,10 @@ TEST_F(SandboxTest, WorksAsChunkEnvironment) {
   lua_setupvalue(L, -2, 1);
   ASSERT_EQ(lua_pcall(L, 0, 0, 0), 0) << lua_tostring(L, -1);
   // Check that x is unmodified in the default environment.
-  lua_getfield(L, -1, "x");
-  ASSERT_EQ(lua_tonumber(L, -1), 3);
+  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
   // But if we get the sandbox, then we can see it has the right value.
   getsandbox(L, sandbox);
-  lua_getfield(L, -1, "x");
-  ASSERT_EQ(lua_tonumber(L, -1), 8);
+  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(8)));
 }
 
 int Source(lua_State *L) {
@@ -142,12 +133,10 @@ TEST_F(SandboxTest, WorksAsClosureEnvironment) {
   lua_pushcclosure(L, &Source, 1);
   ASSERT_EQ(lua_pcall(L, 0, 0, 0), 0) << lua_tostring(L, -1);
   // Checks that x is unmodified in the default environment.
-  lua_getfield(L, -1, "x");
-  ASSERT_EQ(lua_tonumber(L, -1), 3);
+  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
   // But if we get the sandbox, then we can see it has the right value.
   getsandbox(L, sandbox);
-  lua_getfield(L, -1, "x");
-  ASSERT_EQ(lua_tonumber(L, -1), 8);
+  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(8)));
 }
 
 int NoAssignment(lua_State *L) {
@@ -174,7 +163,8 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
     getsandbox(L, sandbox);
     lua_setupvalue(L, -2, 1);
     ASSERT_NE(lua_pcall(L, 0, 0, 0), 0);
-    EXPECT_THAT(lua_tostring(L, -1), HasSubstr("Assignement not allowed"));
+    ASSERT_THAT(Stack::Element(L, -1),
+                IsString(HasSubstr("Assignement not allowed")));
     lua_pop(L, 1);
   }
   // ...because it would work for y since it already exists in the table
@@ -185,9 +175,7 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
     getsandbox(L, sandbox);
     lua_setupvalue(L, -2, 1);
     ASSERT_EQ(lua_pcall(L, 0, 0, 0), 0) << lua_tostring(L, -1);
-    lua_getfield(L, -1, "y");
-    ASSERT_EQ(lua_tonumber(L, -1), 5);
-    lua_pop(L, 1);
+    ASSERT_THAT(Stack::Element(L, -1), HasField("y", IsNumber(5)));
   }
   // So if you want to prevent the modification of existing y, you must stack
   // sandboxes. NOTE: This works because metamethod __newindex is propagated.
@@ -199,7 +187,7 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
     getsandbox(L, stacked_sandbox);
     lua_setupvalue(L, -2, 1);
     ASSERT_NE(lua_pcall(L, 0, 0, 0), 0);
-    EXPECT_THAT(lua_tostring(L, -1), HasSubstr("Assignement not allowed"));
+    ASSERT_THAT(Stack::Element(L, -1), IsString("Assignement not allowed"));
     lua_pop(L, 2);
   }
 }
@@ -209,23 +197,17 @@ TEST_F(SandboxTest, SandboxHelperWorks) {
   {
     Sandbox sandbox(L, -1);
     // Checks we can access 'x' from the base.
-    lua_getfield(L, -1, "x");
-    ASSERT_TRUE(lua_isnumber(L, -1));
-    ASSERT_EQ(lua_tonumber(L, -1), 3);
-    lua_pop(L, 1);
+    ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
     // Checks we can set it to a different value.
     lua_pushnumber(L, 4);
     lua_setfield(L, -2, "x");
     // If we access it, we get the new value.
-    lua_getfield(L, -1, "x");
-    ASSERT_EQ(lua_tonumber(L, -1), 4);
-    lua_pop(L, 1);
+    ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(4)));
     lua_pop(L, 1);
   }
   // When sandbox is out of scope, trying to
   // get x yields the old value.
-  lua_getfield(L, -1, "x");
-  ASSERT_EQ(lua_tonumber(L, -1), 3);
+  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
 }
 
 } // namespace
