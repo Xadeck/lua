@@ -21,28 +21,8 @@ namespace lua {
 // - is stored in the lua registry for easy retrieval from closure.
 //
 
-// Takes the table at `index` on the stack, and creates a sandbox. Returns a
-// reference that can be used by lua_getsandbox() to retrieve that sandbox.
-int newsandbox(lua_State *L, int index);
-// Retrieve a sandbox that was created by lua_newsandbox(L).
-void getsandbox(lua_State *L, int sandbox);
-// Frees the reference held by sandbox. After that, calling lua_getsandbox()
-// will return 0.
-void closesandbox(lua_State *L, int sandbox);
-
-// Use RAI to easily create a scoped sandbox.
-class Sandbox {
-public:
-  Sandbox(lua_State *L, int index) : L_(L), sandbox_(newsandbox(L, index)) {
-    getsandbox(L_, sandbox_);
-  }
-
-  ~Sandbox() { closesandbox(L_, sandbox_); }
-
-private:
-  lua_State *const L_;
-  const int sandbox_;
-};
+// Takes table at `index` on the stack, and pushes a sandbox wrapping it.
+void newsandbox(lua_State *L, int index);
 
 } // namespace lua
 } // namespace xdk

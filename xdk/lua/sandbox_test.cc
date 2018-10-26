@@ -20,14 +20,9 @@ protected:
     lua_pushnumber(L, 3);
     lua_setfield(L, -2, "x");
   }
+
   State L;
 };
-
-TEST_F(SandboxTest, DoesNotChangeStack) {
-  ASSERT_EQ(lua_gettop(L), 1);
-  (void)newsandbox(L, -1);
-  ASSERT_EQ(lua_gettop(L), 1);
-}
 
 TEST_F(SandboxTest, CanBeCreatedAtAnyIndex) {
   lua_pushliteral(L, "filling the stack");
@@ -36,39 +31,23 @@ TEST_F(SandboxTest, CanBeCreatedAtAnyIndex) {
   // using both relative and absolute indices.
   for (int index : {-3, 1}) {
     SCOPED_TRACE(index);
-    int sandbox = newsandbox(L, -3);
-    getsandbox(L, sandbox);
+    newsandbox(L, -3);
     ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
     lua_pop(L, 1);
-    closesandbox(L, sandbox);
   }
 }
 
-TEST_F(SandboxTest, CanBeRetrieved) {
-  int sandbox = newsandbox(L, -1);
-  getsandbox(L, sandbox);
-  ASSERT_EQ(lua_gettop(L), 2);
-  ASSERT_TRUE(lua_istable(L, -1));
-  // But after the sandbox is closed, accessing it returns null.
-  closesandbox(L, sandbox);
-  getsandbox(L, sandbox);
-  ASSERT_EQ(lua_gettop(L), 3);
-  ASSERT_THAT(Stack::Element(L, -1), IsNil());
-}
-
 TEST_F(SandboxTest, HasNoStandardFunctions) {
-  int sandbox = newsandbox(L, -1);
+  newsandbox(L, -1);
 
   for (const char *name : {"require", "print", "setmetatable", "getmetatable",
                            "rawset", "rawget"}) {
     ASSERT_THAT(Stack::Element(L, -1), HasField(name, IsNil()));
   }
-  closesandbox(L, sandbox);
 }
 
 TEST_F(SandboxTest, BaseFieldsCanBeAccessedAndOverridden) {
-  int sandbox = newsandbox(L, -1);
-  getsandbox(L, sandbox);
+  newsandbox(L, -1);
   // Checks we can access 'x' from the base.
   ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
   // Checks we can set it to a different value.
@@ -87,8 +66,7 @@ TEST_F(SandboxTest, BaseTablesAreModifiable) {
   lua_newtable(L);
   lua_setfield(L, -2, "data");
   // Create a sandbox, access base 'data' and set y=5 in it.
-  int sandbox = newsandbox(L, -1);
-  getsandbox(L, sandbox);
+  newsandbox(L, -1);
   lua_getfield(L, -1, "data");
   lua_pushnumber(L, 5);
   lua_setfield(L, -2, "y");
@@ -100,23 +78,22 @@ TEST_F(SandboxTest, BaseTablesAreModifiable) {
 }
 
 TEST_F(SandboxTest, WorksAsChunkEnvironment) {
-  int sandbox = newsandbox(L, -1);
+  newsandbox(L, -1);
   // Loads a chunk of code.
   const char source[] = "x = x + 5";
   ASSERT_EQ(luaL_loadstring(L, source), 0);
-  // Sets the sandbox as its upvalue, and evaluates.
-  getsandbox(L, sandbox);
+  // Sets a sandbox as its upvalue, and evaluates.
+  lua_pushvalue(L, -2);
   lua_setupvalue(L, -2, 1);
   ASSERT_EQ(lua_pcall(L, 0, 0, 0), 0) << lua_tostring(L, -1);
   // Check that x is unmodified in the default environment.
-  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
+  ASSERT_THAT(Stack::Element(L, -2), HasField("x", IsNumber(3)));
   // But if we get the sandbox, then we can see it has the right value.
-  getsandbox(L, sandbox);
   ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(8)));
 }
 
 int Source(lua_State *L) {
-  getsandbox(L, luaL_checknumber(L, lua_upvalueindex(1)));
+  lua_pushvalue(L, lua_upvalueindex(1));
   lua_getfield(L, -1, "x");
   lua_pushnumber(L, lua_tonumber(L, -1) + 5);
   lua_setfield(L, -3, "x");
@@ -124,15 +101,14 @@ int Source(lua_State *L) {
 }
 
 TEST_F(SandboxTest, WorksAsClosureEnvironment) {
-  int sandbox = newsandbox(L, -1);
+  newsandbox(L, -1);
   // Pushes a C closure with the sandbox as its upvalue and evaluates it.
-  lua_pushnumber(L, sandbox);
+  lua_pushvalue(L, -1);
   lua_pushcclosure(L, &Source, 1);
   ASSERT_EQ(lua_pcall(L, 0, 0, 0), 0) << lua_tostring(L, -1);
   // Checks that x is unmodified in the default environment.
-  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
+  ASSERT_THAT(Stack::Element(L, -2), HasField("x", IsNumber(3)));
   // But if we get the sandbox, then we can see it has the right value.
-  getsandbox(L, sandbox);
   ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(8)));
 }
 
@@ -147,8 +123,7 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
   ASSERT_EQ(lua_gettop(L), 1);
   // It is possible to set a field from C code.  with rawset (trying to use
   // setfield would PANIC crash).
-  int sandbox = newsandbox(L, -1);
-  getsandbox(L, sandbox);
+  newsandbox(L, -1);
   lua_pushstring(L, "y");
   lua_pushnumber(L, 3);
   lua_rawset(L, -3);
@@ -157,7 +132,7 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
   {
     const char source[] = "z = 4";
     ASSERT_EQ(luaL_loadstring(L, source), 0);
-    getsandbox(L, sandbox);
+    lua_pushvalue(L, -2);
     lua_setupvalue(L, -2, 1);
     ASSERT_NE(lua_pcall(L, 0, 0, 0), 0);
     ASSERT_THAT(Stack::Element(L, -1),
@@ -169,7 +144,7 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
   {
     const char source[] = "y = 5";
     ASSERT_EQ(luaL_loadstring(L, source), 0);
-    getsandbox(L, sandbox);
+    lua_pushvalue(L, -2);
     lua_setupvalue(L, -2, 1);
     ASSERT_EQ(lua_pcall(L, 0, 0, 0), 0) << lua_tostring(L, -1);
     ASSERT_THAT(Stack::Element(L, -1), HasField("y", IsNumber(5)));
@@ -177,34 +152,16 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
   // So if you want to prevent the modification of existing y, you must stack
   // sandboxes. NOTE: This works because metamethod __newindex is propagated.
   {
-    getsandbox(L, sandbox);
-    int stacked_sandbox = newsandbox(L, -1);
+    lua_pushvalue(L, -1);
+    newsandbox(L, -1);
     const char source[] = "y = 6";
     ASSERT_EQ(luaL_loadstring(L, source), 0);
-    getsandbox(L, stacked_sandbox);
+    lua_pushvalue(L, -2);
     lua_setupvalue(L, -2, 1);
     ASSERT_NE(lua_pcall(L, 0, 0, 0), 0);
     ASSERT_THAT(Stack::Element(L, -1), IsString("Assignement not allowed"));
-    lua_pop(L, 2);
+    lua_pop(L, 2); // sandbox and error message.
   }
-}
-
-TEST_F(SandboxTest, SandboxHelperWorks) {
-  // Create a scoped sandboxed.
-  {
-    Sandbox sandbox(L, -1);
-    // Checks we can access 'x' from the base.
-    ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
-    // Checks we can set it to a different value.
-    lua_pushnumber(L, 4);
-    lua_setfield(L, -2, "x");
-    // If we access it, we get the new value.
-    ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(4)));
-    lua_pop(L, 1);
-  }
-  // When sandbox is out of scope, trying to
-  // get x yields the old value.
-  ASSERT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(3)));
 }
 
 } // namespace

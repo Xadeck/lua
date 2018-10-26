@@ -3,7 +3,7 @@
 namespace xdk {
 namespace lua {
 
-int newsandbox(lua_State *L, int index) {
+void newsandbox(lua_State *L, int index) {
   index = lua_absindex(L, index);
   // Create an empty table. That's where every lookup/assignment done by a
   // function which has the sandbox as its environment will happen.
@@ -22,16 +22,6 @@ int newsandbox(lua_State *L, int index) {
   lua_rawset(L, -3);
   // Set that as the metatable
   lua_setmetatable(L, -2);
-  // Save in the registry so that it can be retrieved.
-  return luaL_ref(L, LUA_REGISTRYINDEX);
-}
-
-void getsandbox(lua_State *L, int sandbox) {
-  lua_rawgeti(L, LUA_REGISTRYINDEX, sandbox);
-}
-
-void closesandbox(lua_State *L, int sandbox) {
-  luaL_unref(L, LUA_REGISTRYINDEX, sandbox);
 }
 
 } // namespace lua
