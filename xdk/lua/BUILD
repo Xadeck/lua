@@ -92,3 +92,48 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "string_view",
+    srcs = ["string_view.cc"],
+    hdrs = ["string_view.h"],
+    copts = COPTS,
+    deps = [
+        ":state",
+        "@com_google_absl//absl/strings",
+        "@lua",
+    ],
+)
+
+cc_test(
+    name = "string_view_test",
+    srcs = ["string_view_test.cc"],
+    copts = COPTS,
+    deps = [
+        ":string_view",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "vector",
+    srcs = ["vector.cc"],
+    hdrs = ["vector.h"],
+    copts = COPTS,
+    deps = [
+        ":string_view",
+        "@lua",
+    ],
+)
+
+cc_test(
+    name = "vector_test",
+    srcs = ["vector_test.cc"],
+    copts = COPTS,
+    deps = [
+        ":matchers",
+        ":state",
+        ":vector",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
