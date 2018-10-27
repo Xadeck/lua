@@ -66,6 +66,15 @@ TEST_F(HasFieldTest, RecursivelyWorks) {
   EXPECT_THAT(Stack::Element(L, -1), HasField("p", HasField("x", IsNumber(3))));
 }
 
+TEST_F(HasFieldTest, MatcherFailure) {
+  lua_newtable(L);
+  lua_pushnumber(L, 3);
+  lua_setfield(L, -2, "x");
+  EXPECT_NONFATAL_FAILURE(
+      EXPECT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(4))),
+      "Field   :   2 [number ] 3");
+}
+
 } // namespace
 } // namespace lua
 } // namespace xdk

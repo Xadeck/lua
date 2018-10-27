@@ -42,10 +42,14 @@ struct HasFieldMatcher final
       return false;
     }
     lua_getfield(L, index, name.c_str());
-    const bool match = matcher.MatchAndExplain(Stack::Element(L, lua_gettop(L)),
-                                               result_listener);
+    auto field_element = Stack::Element(L, lua_gettop(L));
+    if (!matcher.MatchAndExplain(field_element, result_listener)) {
+      *result_listener << "\nField   : " << field_element;
+      lua_pop(L, 1);
+      return false;
+    }
     lua_pop(L, 1);
-    return match;
+    return true;
   }
 };
 } // namespace
