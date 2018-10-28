@@ -1,5 +1,4 @@
-#include "xdk/lua/vector.h"
-#include "xdk/lua/string_view.h"
+#include "xdk/lua/back.h"
 
 namespace xdk {
 namespace lua {
@@ -23,26 +22,6 @@ lua_Number pushn(lua_State *L, int index) {
 }
 } // namespace
 
-void newvector(lua_State *L) {
-  lua_newtable(L);
-  if (luaL_newmetatable(L, "__vector")) {
-    // One time initialization of the metatable.
-  }
-  lua_setmetatable(L, -2);
-}
-
-bool isvector(lua_State *L, int index) {
-  if (lua_getmetatable(L, index)) {
-    lua_pushstring(L, "__name");
-    lua_rawget(L, -2);
-    const bool result =
-        lua_type(L, -1) == LUA_TSTRING && tostring_view(L, -1) == "__vector";
-    lua_pop(L, 2);
-    return result;
-  }
-  return false;
-}
-
 void pushback(lua_State *L, int index) {
   index = lua_absindex(L, index);
   const lua_Number n = getn(L, index);
@@ -62,7 +41,11 @@ void popback(lua_State *L, int index) {
   lua_rawset(L, index);
   // Decrease n and store it back.
   lua_pushstring(L, kSize);
-  lua_pushnumber(L, n - 1);
+  if (1 < n) {
+    lua_pushnumber(L, n - 1);
+  } else {
+    lua_pushnil(L);
+  }
   lua_rawset(L, index);
 }
 

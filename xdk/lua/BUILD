@@ -116,9 +116,9 @@ cc_test(
 )
 
 cc_library(
-    name = "vector",
-    srcs = ["vector.cc"],
-    hdrs = ["vector.h"],
+    name = "back",
+    srcs = ["back.cc"],
+    hdrs = ["back.h"],
     copts = COPTS,
     deps = [
         ":string_view",
@@ -127,13 +127,13 @@ cc_library(
 )
 
 cc_test(
-    name = "vector_test",
-    srcs = ["vector_test.cc"],
+    name = "back_test",
+    srcs = ["back_test.cc"],
     copts = COPTS,
     deps = [
+        ":back",
         ":matchers",
         ":state",
-        ":vector",
         "@com_google_googletest//:gtest_main",
     ],
 )
