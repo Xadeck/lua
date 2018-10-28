@@ -5,21 +5,19 @@
 
 namespace xdk {
 namespace lua {
-// Creates a new vector and pushes it on the stack.
+// Creates a new vector and pushes it onto the stack.
 void newvector(lua_State *L);
-// Return if the value at the given index is a vector.
+// Return true iff the value at the given index is a vector.
 bool isvector(lua_State *L, int index);
-// Pushes the value on the top of the stack at the back of vector at the
+// Adds the value on the top of the stack at the back of vector at the
 // given index.
-//
-// Does nothing if !isvector(L, index).
 void pushback(lua_State *L, int index);
-// Pops the last value pushed value at the back of the vector at the given
-// index.
-//
-// Does nothing if !isvector(L, index).
+// Removes the value at the back of the vector at the given index. Does *not*
+// put it on the stack. Use getback() before that for that purpose.
 void popback(lua_State *L, int index);
-
+// Pushes onto the stack the value at the back of the vector at the given
+// index.  Does *not* remove it from the vector. Use popback() afterwards for
+// that purpose.
 void getback(lua_State *L, int index);
 
 } // namespace lua
