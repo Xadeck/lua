@@ -93,6 +93,7 @@ cc_test(
     deps = [
         ":has_field",
         ":is_number",
+        ":is_string",
         "//xdk/lua:state",
         "@com_google_googletest//:gtest_main",
     ],

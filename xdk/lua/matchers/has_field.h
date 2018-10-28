@@ -8,7 +8,10 @@ namespace xdk {
 namespace lua {
 
 ::testing::Matcher<const Stack::Element &>
-HasField(const char *name, ::testing::Matcher<const Stack::Element &> matcher);
+HasField(const char *key, ::testing::Matcher<const Stack::Element &> matcher);
+
+::testing::Matcher<const Stack::Element &>
+HasField(lua_Number key, ::testing::Matcher<const Stack::Element &> matcher);
 
 } // namespace lua
 } // namespace xdk

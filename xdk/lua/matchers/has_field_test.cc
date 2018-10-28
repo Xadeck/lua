@@ -1,5 +1,6 @@
 #include "xdk/lua/matchers/has_field.h"
 #include "xdk/lua/matchers/is_number.h"
+#include "xdk/lua/matchers/is_string.h"
 #include "xdk/lua/stack.h"
 #include "xdk/lua/state.h"
 #include "gtest/gtest-spi.h"
@@ -16,7 +17,7 @@ protected:
   State L;
 };
 
-TEST_F(HasFieldTest, Success) {
+TEST_F(HasFieldTest, SuccessForString) {
   lua_newtable(L);
   lua_pushnumber(L, 3);
   lua_setfield(L, -2, "x");
@@ -25,10 +26,25 @@ TEST_F(HasFieldTest, Success) {
   EXPECT_THAT(element, HasField("x", IsNumber(3)));
   EXPECT_THAT(element, Not(HasField("x", IsNumber(5))));
   EXPECT_THAT(element, Not(HasField("y", IsNumber(3))));
+  // Using _ matcher returns true, because it maches nil.
   EXPECT_THAT(element, HasField("y", _));
 }
 
-TEST_F(HasFieldTest, Failure) {
+TEST_F(HasFieldTest, SuccessForNumber) {
+  lua_newtable(L);
+  lua_pushnumber(L, 314);
+  lua_pushstring(L, "pi");
+  lua_settable(L, -3);
+
+  auto element = Stack::Element(L, -1);
+  EXPECT_THAT(element, HasField(314, IsString("pi")));
+  EXPECT_THAT(element, Not(HasField(314, IsString("gamma"))));
+  EXPECT_THAT(element, Not(HasField(159, IsString("pi"))));
+  // Using _ matcher returns true, because it maches nil.
+  EXPECT_THAT(element, HasField(159, _));
+}
+
+TEST_F(HasFieldTest, FailureForString) {
   lua_pushstring(L, "dark ground");
   lua_newtable(L);
   lua_pushnumber(L, 3);
@@ -42,18 +58,33 @@ TEST_F(HasFieldTest, Failure) {
   EXPECT_NONFATAL_FAILURE(
       EXPECT_THAT(element, Not(HasField("x", IsNumber(3)))),
       R"(Expected: doesn't have field 'x' or isn't number or isn't equal to 3)");
-  return;
   // Test when not accessing a table
-  element = Stack::Element(L, -1);
+  element = Stack::Element(L, 1);
   EXPECT_NONFATAL_FAILURE(
       EXPECT_THAT(element, HasField("x", IsNumber(3))),
       R"(Expected: has field 'x' which is number and is equal to 3)");
+}
+
+TEST_F(HasFieldTest, FailureForNumber) {
+  lua_pushstring(L, "dark ground");
+  lua_newtable(L);
+  lua_pushnumber(L, 314);
+  lua_pushstring(L, "pi");
+  lua_settable(L, -3);
+
+  // Case where it's a table where the field is not good.
+  auto element = Stack::Element(L, -1);
   EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, HasField("x", IsNumber(3))),
-      R"(Expected: has field 'x' which is number and is equal to 3)");
-  element = Stack::Element(L, 2);
-  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(element, HasField("x", _)),
-                          R"(gettop L:   1)");
+      EXPECT_THAT(element, HasField(314, IsString("gamma"))),
+      R"(Expected: has field 314 which is string and is equal to "gamma")");
+  EXPECT_NONFATAL_FAILURE(
+      EXPECT_THAT(element, Not(HasField(314, IsString("pi")))),
+      R"(doesn't have field 314 or isn't string or isn't equal to "pi")");
+  // Test when not accessing a table
+  element = Stack::Element(L, 1);
+  EXPECT_NONFATAL_FAILURE(
+      EXPECT_THAT(element, HasField(314, IsString("pi"))),
+      R"(has field 314 which is string and is equal to "pi")");
 }
 
 TEST_F(HasFieldTest, RecursivelyWorks) {

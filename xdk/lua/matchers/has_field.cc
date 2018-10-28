@@ -10,38 +10,46 @@ using ::testing::MatcherInterface;
 using ::testing::MatchResultListener;
 
 namespace {
+void Push(lua_State *L, const char *value) { lua_pushstring(L, value); }
+void Push(lua_State *L, lua_Number value) { lua_pushnumber(L, value); }
+void DescribeKey(std::ostream *os, const char *key) {
+  *os << '\'' << key << '\'';
+}
+void DescribeKey(std::ostream *os, lua_Number key) { *os << key; }
+
+template <typename T>
 struct HasFieldMatcher final
     : public ::testing::MatcherInterface<const Stack::Element &> {
-  const std::string name;
+  const T key;
   const Matcher<const Stack::Element &> matcher;
 
-  explicit HasFieldMatcher(const char *name,
+  explicit HasFieldMatcher(const T &key,
                            const Matcher<const Stack::Element &> &matcher)
-      : name(name), matcher(matcher) {}
+      : key(key), matcher(matcher) {}
 
   void DescribeTo(std::ostream *os) const final {
-    *os << "has field '" << name << "' which ";
+    *os << "has field ";
+    DescribeKey(os, key);
+    *os << " which ";
     matcher.DescribeTo(os);
   }
 
   void DescribeNegationTo(std::ostream *os) const final {
-    *os << "doesn't have field '" << name << "' or ";
+    *os << "doesn't have field ";
+    DescribeKey(os, key);
+    *os << " or ";
     matcher.DescribeNegationTo(os);
   }
 
   bool MatchAndExplain(const Stack::Element &element,
                        MatchResultListener *result_listener) const final {
     lua_State *L = element.L;
-    int index = element.index;
-    if (lua_gettop(L) < lua_absindex(L, index)) {
-      *result_listener << "\ngettop L: " << std::setw(3) << lua_gettop(L)
-                       << '\n';
-    }
+    int index = lua_absindex(L, element.index);
     if (lua_type(L, index) != LUA_TTABLE) {
-      *result_listener << "\nProblem: element ist not a table\n";
       return false;
     }
-    lua_getfield(L, index, name.c_str());
+    Push(L, key);
+    lua_gettable(L, index);
     auto field_element = Stack::Element(L, lua_gettop(L));
     if (!matcher.MatchAndExplain(field_element, result_listener)) {
       *result_listener << "\nField   : " << field_element;
@@ -55,8 +63,13 @@ struct HasFieldMatcher final
 } // namespace
 
 Matcher<const Stack::Element &>
-HasField(const char *name, Matcher<const Stack::Element &> matcher) {
-  return MakeMatcher(new HasFieldMatcher(name, matcher));
+HasField(const char *key, Matcher<const Stack::Element &> matcher) {
+  return MakeMatcher(new HasFieldMatcher<const char *>(key, matcher));
+}
+
+Matcher<const Stack::Element &>
+HasField(lua_Number key, Matcher<const Stack::Element &> matcher) {
+  return MakeMatcher(new HasFieldMatcher<lua_Number>(key, matcher));
 }
 
 } // namespace lua
