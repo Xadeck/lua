@@ -13,7 +13,7 @@ protected:
   State L;
 };
 
-TEST_F(BackTest, BackIsNilOnEmptyVector) {
+TEST_F(BackTest, GetbackIsNilOnEmptyVector) {
   lua_newtable(L);
   getback(L, -1);
   ASSERT_THAT(Stack::Element(L, -1), IsNil());
@@ -47,6 +47,16 @@ TEST_F(BackTest, PopbackDoesNothingOnEmptyTable) {
   popback(L, -1);
   ASSERT_THAT(Stack::Element(L, -1), HasField("n", IsNil()));
 }
+
+TEST_F(BackTest, PushingBackNil) {
+  lua_newtable(L);
+  lua_pushnil(L);
+  pushback(L, -2);
+  ASSERT_THAT(Stack::Element(L, -1), HasField("n", IsNumber(1)));
+  getback(L, -1);
+  ASSERT_THAT(Stack::Element(L, -1), IsNil());
+}
+
 } // namespace
 } // namespace lua
 } // namespace xdk
