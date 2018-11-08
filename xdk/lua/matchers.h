@@ -7,6 +7,8 @@
 namespace xdk {
 namespace lua {
 
+::testing::Matcher<const Stack &> TopIs(::testing::Matcher<int> matcher);
+
 ::testing::Matcher<const Stack::Element &>
 IsNumber(const ::testing::Matcher<lua_Number> &matcher);
 ::testing::Matcher<const Stack::Element &>
@@ -21,6 +23,7 @@ HasField(lua_Number key, ::testing::Matcher<const Stack::Element &> matcher);
 ::testing::Matcher<const Stack &>
 Element(int index,
         const ::testing::Matcher<const Stack::Element &> &inner_matcher);
+
 } // namespace lua
 } // namespace xdk
 

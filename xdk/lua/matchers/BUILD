@@ -122,3 +122,26 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "top_is",
+    testonly = 1,
+    srcs = ["top_is.cc"],
+    hdrs = ["top_is.h"],
+    copts = COPTS,
+    deps = [
+        "//xdk/lua:stack",
+        "@com_google_googletest//:gtest",
+    ],
+)
+
+cc_test(
+    name = "top_is_test",
+    srcs = ["top_is_test.cc"],
+    copts = COPTS,
+    deps = [
+        ":top_is",
+        "//xdk/lua:state",
+        "@com_google_googletest//:gtest_main",
+    ],
+)

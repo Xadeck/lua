@@ -24,6 +24,7 @@ cc_test(
 
 cc_library(
     name = "stack",
+    testonly = 1,
     srcs = ["stack.cc"],
     hdrs = ["stack.h"],
     copts = COPTS,
@@ -56,6 +57,7 @@ cc_library(
         "//xdk/lua/matchers:is_nil",
         "//xdk/lua/matchers:is_number",
         "//xdk/lua/matchers:is_string",
+        "//xdk/lua/matchers:top_is",
         "@com_google_googletest//:gtest",
         "@lua",
     ],
