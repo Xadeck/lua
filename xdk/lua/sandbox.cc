@@ -3,7 +3,7 @@
 namespace xdk {
 namespace lua {
 
-void newsandbox(lua_State *L, int index) {
+void newsandbox(lua_State *L, int index) noexcept {
   index = lua_absindex(L, index);
   // Create an empty table. That's where every lookup/assignment done by a
   // function which has the sandbox as its environment will happen.

@@ -22,7 +22,7 @@ lua_Number pushn(lua_State *L, int index) {
 }
 } // namespace
 
-void pushback(lua_State *L, int index) {
+void pushback(lua_State *L, int index) noexcept {
   index = lua_absindex(L, index);
   const lua_Number n = getn(L, index);
   lua_pushnumber(L, n + 1);
@@ -34,7 +34,7 @@ void pushback(lua_State *L, int index) {
   lua_rawset(L, index);
 }
 
-void popback(lua_State *L, int index) {
+void popback(lua_State *L, int index) noexcept {
   index = lua_absindex(L, index);
   const lua_Number n = pushn(L, index);
   lua_pushnil(L);
@@ -49,7 +49,7 @@ void popback(lua_State *L, int index) {
   lua_rawset(L, index);
 }
 
-void getback(lua_State *L, int index) {
+void getback(lua_State *L, int index) noexcept {
   index = lua_absindex(L, index);
   pushn(L, index);
   lua_rawget(L, index);

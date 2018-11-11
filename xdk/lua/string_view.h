@@ -8,7 +8,7 @@ namespace xdk {
 namespace lua {
 // If value at the given index is a string, returns it. Otherwise returns an
 // empty string view.
-absl::string_view tostring_view(lua_State *L, int index);
+absl::string_view tostring_view(lua_State *L, int index) noexcept;
 } // namespace lua
 } // namespace xdk
 
