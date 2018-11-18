@@ -43,7 +43,6 @@ cc_test(
 
 cc_library(
     name = "stack",
-    testonly = 1,
     srcs = ["stack.cc"],
     hdrs = ["stack.h"],
     copts = COPTS,
