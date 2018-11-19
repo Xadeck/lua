@@ -157,3 +157,25 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "rawfield",
+    srcs = ["rawfield.cc"],
+    hdrs = ["rawfield.h"],
+    copts = COPTS,
+    deps = [
+        "@lua",
+    ],
+)
+
+cc_test(
+    name = "rawfield_test",
+    srcs = ["rawfield_test.cc"],
+    copts = COPTS,
+    deps = [
+        ":matchers",
+        ":rawfield",
+        ":state",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
