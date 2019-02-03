@@ -160,3 +160,25 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "read",
+    srcs = ["read.cc"],
+    hdrs = ["read.h"],
+    copts = COPTS,
+    deps = [
+        "@com_google_absl//absl/strings",
+        "@lua",
+    ],
+)
+
+cc_test(
+    name = "read_test",
+    srcs = ["read_test.cc"],
+    copts = COPTS,
+    deps = [
+        ":read",
+        ":state",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
