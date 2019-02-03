@@ -23,25 +23,6 @@ cc_test(
 )
 
 cc_library(
-    name = "popper",
-    srcs = ["popper.cc"],
-    hdrs = ["popper.h"],
-    copts = COPTS,
-    deps = ["@lua"],
-)
-
-cc_test(
-    name = "popper_test",
-    srcs = ["popper_test.cc"],
-    copts = COPTS,
-    deps = [
-        ":popper",
-        ":state",
-        "@com_google_googletest//:gtest_main",
-    ],
-)
-
-cc_library(
     name = "stack",
     srcs = ["stack.cc"],
     hdrs = ["stack.h"],
