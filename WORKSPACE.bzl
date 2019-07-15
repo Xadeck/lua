@@ -1,4 +1,5 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def dependencies():
     git_repository(
@@ -13,7 +14,7 @@ def dependencies():
         tag = "20180600",
     )
 
-    native.new_http_archive(
+    http_archive(
         name = "lua",
         build_file_content = """
 cc_library(
