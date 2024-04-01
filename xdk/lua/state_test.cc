@@ -11,9 +11,9 @@ void *FailingAllocator(void *ud, void *ptr, size_t osize, size_t nsize) {
 }
 
 void *InstrumentedAllocator(void *ud, void *ptr, size_t osize, size_t nsize) {
-  int *const n = reinterpret_cast<int *>(ud);
-  *n -= (ptr ? 1 : 0) * osize;
-  *n += nsize;
+  int *const n  = reinterpret_cast<int *>(ud);
+  *n           -= (ptr ? 1 : 0) * osize;
+  *n           += nsize;
 
   if (nsize == 0) {
     free(ptr);

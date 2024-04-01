@@ -9,5 +9,5 @@ std::string_view tostring_view(lua_State *L, int index) noexcept {
   return s != nullptr ? std::string_view(s) : std::string_view();
 }
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk

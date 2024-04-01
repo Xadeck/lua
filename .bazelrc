@@ -1,2 +1,8 @@
-build --define=absl=1
-test --define=absl=1
+common --experimental_enable_bzlmod
+build --cxxopt=-std=c++2b
+build --cxxopt=-Werror
+
+test --test_output=all
+
+run --ui_event_filters=-info,-stdout,-stderr --noshow_progress
+

@@ -9,10 +9,9 @@ using ::testing::MatcherInterface;
 
 namespace {
 struct ElementMatcher final : public MatcherInterface<const Stack &> {
-  const int index;
+  const int                       index;
   Matcher<const Stack::Element &> inner_matcher;
-  explicit ElementMatcher(int index,
-                          const Matcher<const Stack::Element &> &inner_matcher)
+  explicit ElementMatcher(int index, const Matcher<const Stack::Element &> &inner_matcher)
       : index(index), inner_matcher(inner_matcher) {}
 
   void DescribeTo(std::ostream *os) const override {
@@ -25,20 +24,17 @@ struct ElementMatcher final : public MatcherInterface<const Stack &> {
     inner_matcher.DescribeNegationTo(os);
   }
 
-  bool
-  MatchAndExplain(const Stack &stack,
-                  testing::MatchResultListener *result_listener) const final {
-    return inner_matcher.MatchAndExplain(Stack::Element(stack.L, index),
-                                         result_listener);
+  bool MatchAndExplain(const Stack                  &stack,
+                       testing::MatchResultListener *result_listener) const final {
+    return inner_matcher.MatchAndExplain(Stack::Element(stack.L, index), result_listener);
   }
 };
 
-} // namespace
+}  // namespace
 
-Matcher<const Stack &> Element(int index,
-                               const Matcher<const Stack::Element &> &matcher) {
+Matcher<const Stack &> Element(int index, const Matcher<const Stack::Element &> &matcher) {
   return MakeMatcher(new ElementMatcher(index, matcher));
 }
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk

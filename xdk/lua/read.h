@@ -11,6 +11,6 @@ namespace lua {
 // the concatenated chunks.
 std::string Read(lua_Reader reader, lua_State *L, void *data);
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk
 #endif

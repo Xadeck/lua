@@ -24,7 +24,7 @@ namespace lua {
 // Takes table at `index` on the stack, and pushes a sandbox wrapping it.
 void newsandbox(lua_State *L, int index) noexcept;
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk
 
-#endif // XDK_LUA_SANDBOX_H_
+#endif  // XDK_LUA_SANDBOX_H_

@@ -1,9 +1,10 @@
 #include "xdk/lua/matchers/has_field.h"
+
+#include "gtest/gtest-spi.h"
 #include "xdk/lua/matchers/is_number.h"
 #include "xdk/lua/matchers/is_string.h"
 #include "xdk/lua/stack.h"
 #include "xdk/lua/state.h"
-#include "gtest/gtest-spi.h"
 
 namespace xdk {
 namespace lua {
@@ -14,7 +15,7 @@ using ::testing::Not;
 using ::testing::StrEq;
 
 class HasFieldTest : public ::testing::Test {
-protected:
+ protected:
   State L;
 };
 
@@ -53,17 +54,15 @@ TEST_F(HasFieldTest, FailureForString) {
 
   // Case where it's a table where the field is not good.
   auto element = Stack::Element(L, -1);
-  EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, HasField("x", IsNumber(5))),
-      R"(Expected: has field 'x' which is number and is equal to 5)");
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(element, HasField("x", IsNumber(5))),
+                          R"(Expected: has field 'x' which is number and is equal to 5)");
   EXPECT_NONFATAL_FAILURE(
       EXPECT_THAT(element, Not(HasField("x", IsNumber(3)))),
       R"(Expected: doesn't have field 'x' or isn't number or isn't equal to 3)");
   // Test when not accessing a table
   element = Stack::Element(L, 1);
-  EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, HasField("x", IsNumber(3))),
-      R"(Expected: has field 'x' which is number and is equal to 3)");
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(element, HasField("x", IsNumber(3))),
+                          R"(Expected: has field 'x' which is number and is equal to 3)");
 }
 
 TEST_F(HasFieldTest, FailureForNumber) {
@@ -75,17 +74,14 @@ TEST_F(HasFieldTest, FailureForNumber) {
 
   // Case where it's a table where the field is not good.
   auto element = Stack::Element(L, -1);
-  EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, HasField(314, IsString(StrEq("gamma")))),
-      R"(Expected: has field 314 which is string and is equal to "gamma")");
-  EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, Not(HasField(314, IsString(StrEq("pi"))))),
-      R"(doesn't have field 314 or isn't string or isn't equal to "pi")");
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(element, HasField(314, IsString(StrEq("gamma")))),
+                          R"(Expected: has field 314 which is string and is equal to "gamma")");
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(element, Not(HasField(314, IsString(StrEq("pi"))))),
+                          R"(doesn't have field 314 or isn't string or isn't equal to "pi")");
   // Test when not accessing a table
   element = Stack::Element(L, 1);
-  EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, HasField(314, IsString(StrEq("pi")))),
-      R"(has field 314 which is string and is equal to "pi")");
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(element, HasField(314, IsString(StrEq("pi")))),
+                          R"(has field 314 which is string and is equal to "pi")");
 }
 
 TEST_F(HasFieldTest, RecursivelyWorks) {
@@ -102,11 +98,10 @@ TEST_F(HasFieldTest, MatcherFailure) {
   lua_newtable(L);
   lua_pushnumber(L, 3);
   lua_setfield(L, -2, "x");
-  EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(4))),
-      "Field   :   2 [number ] 3");
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(Stack::Element(L, -1), HasField("x", IsNumber(4))),
+                          "Field   :   2 [number ] 3");
 }
 
-} // namespace
-} // namespace lua
-} // namespace xdk
+}  // namespace
+}  // namespace lua
+}  // namespace xdk

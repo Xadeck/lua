@@ -1,9 +1,9 @@
 #include "xdk/lua/back.h"
+
+#include "gtest/gtest.h"
 #include "xdk/lua/matchers.h"
 #include "xdk/lua/stack.h"
 #include "xdk/lua/state.h"
-
-#include "gtest/gtest.h"
 
 namespace xdk {
 namespace lua {
@@ -11,7 +11,7 @@ namespace {
 using ::testing::StrEq;
 
 class BackTest : public ::testing::Test {
-protected:
+ protected:
   State L;
 };
 
@@ -59,6 +59,6 @@ TEST_F(BackTest, PushingBackNil) {
   ASSERT_THAT(Stack::Element(L, -1), IsNil());
 }
 
-} // namespace
-} // namespace lua
-} // namespace xdk
+}  // namespace
+}  // namespace lua
+}  // namespace xdk

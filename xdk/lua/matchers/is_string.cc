@@ -1,7 +1,8 @@
 #include "xdk/lua/matchers/is_string.h"
-#include "xdk/lua/stack.h"
 
 #include <string_view>
+
+#include "xdk/lua/stack.h"
 
 namespace xdk {
 namespace lua {
@@ -12,12 +13,10 @@ using ::testing::MatcherInterface;
 using ::testing::MatchResultListener;
 
 namespace {
-struct IsStringMatcher final
-    : public ::testing::MatcherInterface<const Stack::Element &> {
+struct IsStringMatcher final : public ::testing::MatcherInterface<const Stack::Element &> {
   const Matcher<std::string_view> matcher;
 
-  explicit IsStringMatcher(const Matcher<std::string_view> &matcher)
-      : matcher(matcher) {}
+  explicit IsStringMatcher(const Matcher<std::string_view> &matcher) : matcher(matcher) {}
 
   void DescribeTo(std::ostream *os) const final {
     *os << "is string and ";
@@ -30,22 +29,21 @@ struct IsStringMatcher final
   }
 
   bool MatchAndExplain(const Stack::Element &element,
-                       MatchResultListener *result_listener) const final {
-    lua_State *L = element.L;
-    int index = element.index;
+                       MatchResultListener  *result_listener) const final {
+    lua_State *L     = element.L;
+    int        index = element.index;
     if (lua_gettop(L) < lua_absindex(L, index)) {
-      *result_listener << "\ngettop L: " << std::setw(3) << lua_gettop(L)
-                       << '\n';
+      *result_listener << "\ngettop L: " << std::setw(3) << lua_gettop(L) << '\n';
     }
     return lua_type(L, index) == LUA_TSTRING &&
            matcher.MatchAndExplain(lua_tostring(L, index), result_listener);
   }
 };
-} // namespace
+}  // namespace
 
 Matcher<const Stack::Element &> IsString(Matcher<std::string_view> matcher) {
   return MakeMatcher(new IsStringMatcher(matcher));
 }
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk

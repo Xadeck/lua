@@ -1,4 +1,5 @@
 #include "xdk/lua/matchers/has_field.h"
+
 #include "xdk/lua/stack.h"
 
 namespace xdk {
@@ -10,21 +11,25 @@ using ::testing::MatcherInterface;
 using ::testing::MatchResultListener;
 
 namespace {
-void Push(lua_State *L, const char *value) { lua_pushstring(L, value); }
-void Push(lua_State *L, lua_Number value) { lua_pushnumber(L, value); }
+void Push(lua_State *L, const char *value) {
+  lua_pushstring(L, value);
+}
+void Push(lua_State *L, lua_Number value) {
+  lua_pushnumber(L, value);
+}
 void DescribeKey(std::ostream *os, const char *key) {
   *os << '\'' << key << '\'';
 }
-void DescribeKey(std::ostream *os, lua_Number key) { *os << key; }
+void DescribeKey(std::ostream *os, lua_Number key) {
+  *os << key;
+}
 
 template <typename T>
-struct HasFieldMatcher final
-    : public ::testing::MatcherInterface<const Stack::Element &> {
-  const T key;
+struct HasFieldMatcher final : public ::testing::MatcherInterface<const Stack::Element &> {
+  const T                               key;
   const Matcher<const Stack::Element &> matcher;
 
-  explicit HasFieldMatcher(const T &key,
-                           const Matcher<const Stack::Element &> &matcher)
+  explicit HasFieldMatcher(const T &key, const Matcher<const Stack::Element &> &matcher)
       : key(key), matcher(matcher) {}
 
   void DescribeTo(std::ostream *os) const final {
@@ -42,9 +47,9 @@ struct HasFieldMatcher final
   }
 
   bool MatchAndExplain(const Stack::Element &element,
-                       MatchResultListener *result_listener) const final {
-    lua_State *L = element.L;
-    int index = lua_absindex(L, element.index);
+                       MatchResultListener  *result_listener) const final {
+    lua_State *L     = element.L;
+    int        index = lua_absindex(L, element.index);
     if (lua_type(L, index) != LUA_TTABLE) {
       return false;
     }
@@ -60,17 +65,15 @@ struct HasFieldMatcher final
     return true;
   }
 };
-} // namespace
+}  // namespace
 
-Matcher<const Stack::Element &>
-HasField(const char *key, Matcher<const Stack::Element &> matcher) {
+Matcher<const Stack::Element &> HasField(const char *key, Matcher<const Stack::Element &> matcher) {
   return MakeMatcher(new HasFieldMatcher<const char *>(key, matcher));
 }
 
-Matcher<const Stack::Element &>
-HasField(lua_Number key, Matcher<const Stack::Element &> matcher) {
+Matcher<const Stack::Element &> HasField(lua_Number key, Matcher<const Stack::Element &> matcher) {
   return MakeMatcher(new HasFieldMatcher<lua_Number>(key, matcher));
 }
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk

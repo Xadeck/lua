@@ -27,7 +27,9 @@ class State final {
  public:
   State(lua_Alloc alloc = nullptr, void *ud = nullptr) noexcept;
 
-  operator lua_State *() const noexcept { return ptr_.get(); }
+  operator lua_State *() const noexcept {
+    return ptr_.get();
+  }
 
  private:
   explicit State(lua_State *L) noexcept;

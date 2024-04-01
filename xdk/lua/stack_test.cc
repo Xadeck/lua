@@ -1,13 +1,13 @@
 #include "xdk/lua/stack.h"
-#include "xdk/lua/state.h"
 
 #include "gtest/gtest.h"
+#include "xdk/lua/state.h"
 
 namespace xdk {
 namespace lua {
 namespace {
 class StackTest : public ::testing::Test {
-protected:
+ protected:
   StackTest() {
     lua_pushnil(L);
     lua_newtable(L);
@@ -44,6 +44,6 @@ TEST_F(StackTest, StackIsStreamable) {
 )");
 }
 
-} // namespace
-} // namespace lua
-} // namespace xdk
+}  // namespace
+}  // namespace lua
+}  // namespace xdk

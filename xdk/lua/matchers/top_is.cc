@@ -1,4 +1,5 @@
 #include "xdk/lua/matchers/top_is.h"
+
 #include "xdk/lua/stack.h"
 
 namespace xdk {
@@ -25,16 +26,15 @@ struct TopIsMatcher final : public ::testing::MatcherInterface<const Stack &> {
     matcher.DescribeNegationTo(os);
   }
 
-  bool MatchAndExplain(const Stack &stack,
-                       MatchResultListener *result_listener) const final {
+  bool MatchAndExplain(const Stack &stack, MatchResultListener *result_listener) const final {
     return matcher.MatchAndExplain(lua_gettop(stack.L), result_listener);
   }
 };
-} // namespace
+}  // namespace
 
 Matcher<const Stack &> TopIs(Matcher<int> matcher) {
   return MakeMatcher(new TopIsMatcher(matcher));
 }
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk

@@ -1,7 +1,8 @@
 #include "xdk/lua/matchers/top_is.h"
+
+#include "gtest/gtest-spi.h"
 #include "xdk/lua/stack.h"
 #include "xdk/lua/state.h"
-#include "gtest/gtest-spi.h"
 
 namespace xdk {
 namespace lua {
@@ -12,7 +13,7 @@ using ::testing::Gt;
 using ::testing::Not;
 
 class TopIsTest : public ::testing::Test {
-protected:
+ protected:
   State L;
 };
 
@@ -29,12 +30,11 @@ TEST_F(TopIsTest, Success) {
 TEST_F(TopIsTest, Failure) {
   lua_pushinteger(L, 3);
 
-  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(Stack(L), TopIs(2)),
-                          R"(Expected:  top is equal to 2)");
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(Stack(L), TopIs(2)), R"(Expected:  top is equal to 2)");
   EXPECT_NONFATAL_FAILURE(EXPECT_THAT(Stack(L), Not(TopIs(1))),
                           R"(Expected: top isn't equal to 1)");
 }
 
-} // namespace
-} // namespace lua
-} // namespace xdk
+}  // namespace
+}  // namespace lua
+}  // namespace xdk

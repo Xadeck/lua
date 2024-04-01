@@ -1,7 +1,7 @@
-#include "xdk/lua/state.h"
 #include "xdk/lua/string_view.h"
 
 #include "gmock/gmock.h"
+#include "xdk/lua/state.h"
 
 namespace xdk {
 namespace lua {
@@ -17,6 +17,6 @@ TEST(StringView, Works) {
   EXPECT_EQ(tostring_view(L, 3), "3");
   EXPECT_EQ(tostring_view(L, 4), "");
 }
-} // namespace
-} // namespace lua
-} // namespace xdk
+}  // namespace
+}  // namespace lua
+}  // namespace xdk

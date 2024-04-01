@@ -24,5 +24,5 @@ void newsandbox(lua_State *L, int index) noexcept {
   lua_setmetatable(L, -2);
 }
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk

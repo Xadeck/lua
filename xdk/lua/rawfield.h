@@ -13,7 +13,7 @@ void rawsetfieldnewtable(lua_State *L, int index, const char *k);
 void rawsetfieldstring(lua_State *L, int index, const char *k, const char *s);
 void rawsetfieldnumber(lua_State *L, int index, const char *k, lua_Number d);
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk
 
 #endif

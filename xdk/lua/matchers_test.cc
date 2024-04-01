@@ -1,4 +1,5 @@
 #include "xdk/lua/matchers.h"
+
 #include "xdk/lua/stack.h"
 #include "xdk/lua/state.h"
 
@@ -17,12 +18,11 @@ TEST(Matchers, WrapUp) {
   lua_pushinteger(L, 3);
   lua_setfield(L, -2, "three");
   lua_pushnil(L);
-  EXPECT_THAT(Stack(L), AllOf(Element(1, IsNumber(1)),            //
-                              Element(2, IsString(StrEq("two"))), //
-                              Element(3, HasField("three", IsNumber(3))),
-                              Element(4, IsNil())));
+  EXPECT_THAT(Stack(L), AllOf(Element(1, IsNumber(1)),             //
+                              Element(2, IsString(StrEq("two"))),  //
+                              Element(3, HasField("three", IsNumber(3))), Element(4, IsNil())));
 }
 
-} // namespace
-} // namespace lua
-} // namespace xdk
+}  // namespace
+}  // namespace lua
+}  // namespace xdk

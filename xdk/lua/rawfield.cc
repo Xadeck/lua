@@ -40,5 +40,5 @@ void rawsetfieldnumber(lua_State *L, int index, const char *k, lua_Number d) {
   rawsetfield(L, index, k);
 }
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk

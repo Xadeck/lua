@@ -15,7 +15,7 @@ void popback(lua_State *L, int index) noexcept;
 // numeric value of t["n"] or 0 if it is not a number.
 void getback(lua_State *L, int index) noexcept;
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk
 
 #endif

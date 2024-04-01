@@ -1,9 +1,9 @@
-#include "xdk/lua/matchers.h"
 #include "xdk/lua/sandbox.h"
-#include "xdk/lua/state.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "xdk/lua/matchers.h"
+#include "xdk/lua/state.h"
 
 namespace xdk {
 namespace lua {
@@ -14,7 +14,7 @@ using ::testing::HasSubstr;
 using ::testing::StrEq;
 
 class SandboxTest : public testing::Test {
-protected:
+ protected:
   SandboxTest() {
     // Create a table with field x=3
     lua_newtable(L);
@@ -41,8 +41,8 @@ TEST_F(SandboxTest, CanBeCreatedAtAnyIndex) {
 TEST_F(SandboxTest, HasNoStandardFunctions) {
   newsandbox(L, -1);
 
-  for (const char *name : {"require", "print", "setmetatable", "getmetatable",
-                           "rawset", "rawget"}) {
+  for (const char *name :
+       {"require", "print", "setmetatable", "getmetatable", "rawset", "rawget"}) {
     ASSERT_THAT(Stack::Element(L, -1), HasField(name, IsNil()));
   }
 }
@@ -73,9 +73,8 @@ TEST_F(SandboxTest, BaseTablesAreModifiable) {
   lua_setfield(L, -2, "y");
   // Pops 'data' and the sandbox, and check that base has x=5.
   lua_pop(L, 2);
-  EXPECT_EQ(lua_gettop(L), 1); // To make sure we check base.
-  ASSERT_THAT(Stack::Element(L, -1),
-              HasField("data", HasField("y", IsNumber(5))));
+  EXPECT_EQ(lua_gettop(L), 1);  // To make sure we check base.
+  ASSERT_THAT(Stack::Element(L, -1), HasField("data", HasField("y", IsNumber(5))));
 }
 
 TEST_F(SandboxTest, WorksAsChunkEnvironment) {
@@ -136,8 +135,7 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
     lua_pushvalue(L, -2);
     lua_setupvalue(L, -2, 1);
     ASSERT_NE(lua_pcall(L, 0, 0, 0), 0);
-    ASSERT_THAT(Stack::Element(L, -1),
-                IsString(HasSubstr("Assignement not allowed")));
+    ASSERT_THAT(Stack::Element(L, -1), IsString(HasSubstr("Assignement not allowed")));
     lua_pop(L, 1);
   }
   // ...because it would work for y since it already exists in the table
@@ -160,12 +158,11 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
     lua_pushvalue(L, -2);
     lua_setupvalue(L, -2, 1);
     ASSERT_NE(lua_pcall(L, 0, 0, 0), 0);
-    ASSERT_THAT(Stack::Element(L, -1),
-                IsString(StrEq("Assignement not allowed")));
-    lua_pop(L, 2); // sandbox and error message.
+    ASSERT_THAT(Stack::Element(L, -1), IsString(StrEq("Assignement not allowed")));
+    lua_pop(L, 2);  // sandbox and error message.
   }
 }
 
-} // namespace
-} // namespace lua
-} // namespace xdk
+}  // namespace
+}  // namespace lua
+}  // namespace xdk

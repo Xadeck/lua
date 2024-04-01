@@ -1,7 +1,8 @@
-#include "xdk/lua/matchers.h"
 #include "xdk/lua/rawfield.h"
-#include "xdk/lua/state.h"
+
 #include "gtest/gtest.h"
+#include "xdk/lua/matchers.h"
+#include "xdk/lua/state.h"
 
 namespace xdk {
 namespace lua {
@@ -10,20 +11,18 @@ namespace {
 using ::testing::StrEq;
 
 int getvar(lua_State *L) {
-  float *const var =
-      reinterpret_cast<float *>(lua_touserdata(L, lua_upvalueindex(1)));
+  float *const var = reinterpret_cast<float *>(lua_touserdata(L, lua_upvalueindex(1)));
   lua_pushnumber(L, *var);
   return 1;
 }
 int setvar(lua_State *L) {
-  float *const var =
-      reinterpret_cast<float *>(lua_touserdata(L, lua_upvalueindex(1)));
-  *var = lua_tonumber(L, 3);
+  float *const var = reinterpret_cast<float *>(lua_touserdata(L, lua_upvalueindex(1)));
+  *var             = lua_tonumber(L, 3);
   return 0;
 }
 
 class TableTest : public ::testing::Test {
-protected:
+ protected:
   TableTest() {
     lua_newtable(L);
     // Create a metatable
@@ -37,7 +36,7 @@ protected:
     lua_setmetatable(L, -2);
   }
   lua::State L;
-  float var_ = 0;
+  float      var_ = 0;
 };
 
 TEST_F(TableTest, GetFieldUsesMetamethod) {
@@ -57,7 +56,7 @@ TEST_F(TableTest, RawGetFieldWorks) {
   lua_pushstring(L, "z");
   lua_pushnumber(L, 3.0);
   lua_rawset(L, -3);
-  ASSERT_EQ(var_, 0.0); // no metamethod triggered.
+  ASSERT_EQ(var_, 0.0);  // no metamethod triggered.
 
   rawgetfield(L, -1, "z");
   ASSERT_THAT(Stack::Element(L, -1), IsNumber(3.0));
@@ -66,7 +65,7 @@ TEST_F(TableTest, RawGetFieldWorks) {
 TEST_F(TableTest, RawSetFieldWorks) {
   lua_pushnumber(L, 3.0);
   rawsetfield(L, -2, "z");
-  ASSERT_EQ(var_, 0.0); // no metamethod triggered.
+  ASSERT_EQ(var_, 0.0);  // no metamethod triggered.
 
   lua_pushstring(L, "z");
   lua_rawget(L, -2);
@@ -97,6 +96,6 @@ TEST_F(TableTest, RawSetFieldNumberWorks) {
   ASSERT_THAT(Stack::Element(L, -1), IsNumber(3.0));
 }
 
-} // namespace
-} // namespace lua
-} // namespace xdk
+}  // namespace
+}  // namespace lua
+}  // namespace xdk

@@ -14,7 +14,7 @@ struct Stack {
   struct Element {
     Element(lua_State *L, int index) : L(L), index(index) {}
     lua_State *L;
-    int index;
+    int        index;
   };
 
   lua_State *L;
@@ -23,7 +23,7 @@ struct Stack {
 std::ostream &operator<<(std::ostream &os, const Stack::Element &element);
 std::ostream &operator<<(std::ostream &os, const Stack &stack);
 
-} // namespace lua
-} // namespace xdk
+}  // namespace lua
+}  // namespace xdk
 
 #endif
