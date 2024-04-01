@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 3,
-  "moduleFileHash": "6380ed6022df759458cd784e6eb81eb59096b2be17f99299cd0d60d93acab4fa",
+  "moduleFileHash": "c3e05dd2ebbe2beeb4849bafba662956ab5537d57f1978400343a839fd050112",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -41,9 +41,9 @@
             {
               "tagName": "@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
               "attributeValues": {
-                "build_file_content": "\ncc_library(\n    name = \"lua\",\n    srcs = glob(\n        [\n            \"lua-5.3.5/src/*.c\",\n            \"lua-5.3.5/src/*.h\",\n        ],\n        exclude = [\n            \"lua-5.3.5/src/lua.c\",\n            \"lua-5.3.5/src/luac.c\",\n        ],\n    ),\n    hdrs = [\n        \"lua-5.3.5/src/lauxlib.h\",\n        \"lua-5.3.5/src/lua.h\",\n        \"lua-5.3.5/src/lua.hpp\",\n        \"lua-5.3.5/src/luaconf.h\",\n        \"lua-5.3.5/src/lualib.h\",\n    ],\n    copts = [\"-w\"],  # inhibit all warning messages\n    includes = [\"lua-5.3.5/src\"],\n    strip_include_prefix = \"lua-5.3.5/src\",\n    include_prefix = \"xdk/lua\",\n    visibility = [\"//visibility:public\"],\n)\n        ",
-                "sha256": "0c2eed3f960446e1a3e4b9a1ca2f3ff893b6ce41942cf54d5dd59ab4b3b058ac",
-                "url": "http://www.lua.org/ftp/lua-5.3.5.tar.gz",
+                "build_file_content": "\ncc_library(\n    name = \"lua\",\n    srcs = glob(\n        [\n            \"lua-5.4.6/src/*.c\",\n            \"lua-5.4.6/src/*.h\",\n        ],\n        exclude = [\n            \"lua-5.4.6/src/lua.c\",\n            \"lua-5.4.6/src/luac.c\",\n        ],\n    ),\n    hdrs = [\n        \"lua-5.4.6/src/lauxlib.h\",\n        \"lua-5.4.6/src/lua.h\",\n        \"lua-5.4.6/src/lua.hpp\",\n        \"lua-5.4.6/src/luaconf.h\",\n        \"lua-5.4.6/src/lualib.h\",\n    ],\n    copts = [\"-w\"],  # inhibit all warning messages\n    includes = [\"lua-5.4.6/src\"],\n    strip_include_prefix = \"lua-5.4.6/src\",\n    include_prefix = \"xdk/lua\",\n    visibility = [\"//visibility:public\"],\n)\n        ",
+                "sha256": "7d5ea1b9cb6aa0b59ca3dde1c6adcb57ef83a1ba8e5432c0ecd06bf439b3ad88",
+                "url": "https://www.lua.org/ftp/lua-5.4.6.tar.gz",
                 "name": "lua"
               },
               "devDependency": false,
@@ -1320,9 +1320,9 @@
             "bzlFile": "@@bazel_tools//tools/build_defs/repo:http.bzl",
             "ruleClassName": "http_archive",
             "attributes": {
-              "build_file_content": "\ncc_library(\n    name = \"lua\",\n    srcs = glob(\n        [\n            \"lua-5.3.5/src/*.c\",\n            \"lua-5.3.5/src/*.h\",\n        ],\n        exclude = [\n            \"lua-5.3.5/src/lua.c\",\n            \"lua-5.3.5/src/luac.c\",\n        ],\n    ),\n    hdrs = [\n        \"lua-5.3.5/src/lauxlib.h\",\n        \"lua-5.3.5/src/lua.h\",\n        \"lua-5.3.5/src/lua.hpp\",\n        \"lua-5.3.5/src/luaconf.h\",\n        \"lua-5.3.5/src/lualib.h\",\n    ],\n    copts = [\"-w\"],  # inhibit all warning messages\n    includes = [\"lua-5.3.5/src\"],\n    strip_include_prefix = \"lua-5.3.5/src\",\n    include_prefix = \"xdk/lua\",\n    visibility = [\"//visibility:public\"],\n)\n        ",
-              "sha256": "0c2eed3f960446e1a3e4b9a1ca2f3ff893b6ce41942cf54d5dd59ab4b3b058ac",
-              "url": "http://www.lua.org/ftp/lua-5.3.5.tar.gz",
+              "build_file_content": "\ncc_library(\n    name = \"lua\",\n    srcs = glob(\n        [\n            \"lua-5.4.6/src/*.c\",\n            \"lua-5.4.6/src/*.h\",\n        ],\n        exclude = [\n            \"lua-5.4.6/src/lua.c\",\n            \"lua-5.4.6/src/luac.c\",\n        ],\n    ),\n    hdrs = [\n        \"lua-5.4.6/src/lauxlib.h\",\n        \"lua-5.4.6/src/lua.h\",\n        \"lua-5.4.6/src/lua.hpp\",\n        \"lua-5.4.6/src/luaconf.h\",\n        \"lua-5.4.6/src/lualib.h\",\n    ],\n    copts = [\"-w\"],  # inhibit all warning messages\n    includes = [\"lua-5.4.6/src\"],\n    strip_include_prefix = \"lua-5.4.6/src\",\n    include_prefix = \"xdk/lua\",\n    visibility = [\"//visibility:public\"],\n)\n        ",
+              "sha256": "7d5ea1b9cb6aa0b59ca3dde1c6adcb57ef83a1ba8e5432c0ecd06bf439b3ad88",
+              "url": "https://www.lua.org/ftp/lua-5.4.6.tar.gz",
               "name": "_main~_repo_rules~lua"
             }
           }
