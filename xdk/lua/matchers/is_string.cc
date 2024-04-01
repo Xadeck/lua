@@ -1,6 +1,8 @@
 #include "xdk/lua/matchers/is_string.h"
 #include "xdk/lua/stack.h"
 
+#include <string_view>
+
 namespace xdk {
 namespace lua {
 
@@ -12,9 +14,9 @@ using ::testing::MatchResultListener;
 namespace {
 struct IsStringMatcher final
     : public ::testing::MatcherInterface<const Stack::Element &> {
-  const Matcher<absl::string_view> matcher;
+  const Matcher<std::string_view> matcher;
 
-  explicit IsStringMatcher(const Matcher<absl::string_view> &matcher)
+  explicit IsStringMatcher(const Matcher<std::string_view> &matcher)
       : matcher(matcher) {}
 
   void DescribeTo(std::ostream *os) const final {
@@ -41,7 +43,7 @@ struct IsStringMatcher final
 };
 } // namespace
 
-Matcher<const Stack::Element &> IsString(Matcher<absl::string_view> matcher) {
+Matcher<const Stack::Element &> IsString(Matcher<std::string_view> matcher) {
   return MakeMatcher(new IsStringMatcher(matcher));
 }
 

@@ -22,20 +22,20 @@ protected:
 TEST_F(StackTest, StackElementIsStreamable) {
   std::ostringstream os;
   os << Stack::Element(L, 1);
-  EXPECT_EQ(os.str(), "  1 [nil    ] ");
+  EXPECT_EQ(os.str(), "  1 [nil    ]");
 }
 
 TEST_F(StackTest, StackElementOutsideRangeWorks) {
   std::ostringstream os;
   os << Stack::Element(L, 13);
-  EXPECT_EQ(os.str(), " 13 [no value] ");
+  EXPECT_EQ(os.str(), " 13 [no value]");
 }
 
 TEST_F(StackTest, StackIsStreamable) {
   std::ostringstream os;
   os << Stack(L);
   EXPECT_EQ(os.str(), R"(---
-  1 [nil    ] 
+  1 [nil    ]
   2 [table  ] {...}
   3 [number ] 3
   4 [number ] 1.2

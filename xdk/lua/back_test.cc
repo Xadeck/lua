@@ -8,6 +8,8 @@
 namespace xdk {
 namespace lua {
 namespace {
+using ::testing::StrEq;
+
 class BackTest : public ::testing::Test {
 protected:
   State L;
@@ -33,7 +35,7 @@ TEST_F(BackTest, BackWorks) {
   // Get elements can be get/popped.
   for (const char *fruit : {"pear", "banana", "apple"}) {
     getback(L, -1);
-    ASSERT_THAT(Stack::Element(L, -1), IsString(fruit));
+    ASSERT_THAT(Stack::Element(L, -1), IsString(StrEq(fruit)));
     lua_pop(L, 1);
     // Then remove it from the back.
     popback(L, -1);

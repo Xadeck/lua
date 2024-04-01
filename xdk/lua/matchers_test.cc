@@ -7,6 +7,7 @@ namespace lua {
 namespace {
 
 using ::testing::AllOf;
+using ::testing::StrEq;
 
 TEST(Matchers, WrapUp) {
   State L;
@@ -14,10 +15,10 @@ TEST(Matchers, WrapUp) {
   lua_pushstring(L, "two");
   lua_newtable(L);
   lua_pushinteger(L, 3);
-  lua_setfield(L, -2, "threee");
+  lua_setfield(L, -2, "three");
   lua_pushnil(L);
-  EXPECT_THAT(Stack(L), AllOf(Element(1, IsNumber(1)),     //
-                              Element(2, IsString("two")), //
+  EXPECT_THAT(Stack(L), AllOf(Element(1, IsNumber(1)),            //
+                              Element(2, IsString(StrEq("two"))), //
                               Element(3, HasField("three", IsNumber(3))),
                               Element(4, IsNil())));
 }

@@ -7,6 +7,8 @@ namespace xdk {
 namespace lua {
 namespace {
 
+using ::testing::StrEq;
+
 int getvar(lua_State *L) {
   float *const var =
       reinterpret_cast<float *>(lua_touserdata(L, lua_upvalueindex(1)));
@@ -86,7 +88,7 @@ TEST_F(TableTest, RawSetFieldNewtableWorks) {
 TEST_F(TableTest, RawSetFieldStringWorks) {
   rawsetfieldstring(L, -1, "w", "text");
   rawgetfield(L, -1, "w");
-  ASSERT_THAT(Stack::Element(L, -1), IsString("text"));
+  ASSERT_THAT(Stack::Element(L, -1), IsString(StrEq("text")));
 }
 
 TEST_F(TableTest, RawSetFieldNumberWorks) {

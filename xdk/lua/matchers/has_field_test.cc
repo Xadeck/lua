@@ -11,6 +11,7 @@ namespace {
 
 using ::testing::_;
 using ::testing::Not;
+using ::testing::StrEq;
 
 class HasFieldTest : public ::testing::Test {
 protected:
@@ -37,9 +38,9 @@ TEST_F(HasFieldTest, SuccessForNumber) {
   lua_settable(L, -3);
 
   auto element = Stack::Element(L, -1);
-  EXPECT_THAT(element, HasField(314, IsString("pi")));
-  EXPECT_THAT(element, Not(HasField(314, IsString("gamma"))));
-  EXPECT_THAT(element, Not(HasField(159, IsString("pi"))));
+  EXPECT_THAT(element, HasField(314, IsString(StrEq("pi"))));
+  EXPECT_THAT(element, Not(HasField(314, IsString(StrEq("gamma")))));
+  EXPECT_THAT(element, Not(HasField(159, IsString(StrEq("pi")))));
   // Using _ matcher returns true, because it maches nil.
   EXPECT_THAT(element, HasField(159, _));
 }
@@ -75,15 +76,15 @@ TEST_F(HasFieldTest, FailureForNumber) {
   // Case where it's a table where the field is not good.
   auto element = Stack::Element(L, -1);
   EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, HasField(314, IsString("gamma"))),
+      EXPECT_THAT(element, HasField(314, IsString(StrEq("gamma")))),
       R"(Expected: has field 314 which is string and is equal to "gamma")");
   EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, Not(HasField(314, IsString("pi")))),
+      EXPECT_THAT(element, Not(HasField(314, IsString(StrEq("pi"))))),
       R"(doesn't have field 314 or isn't string or isn't equal to "pi")");
   // Test when not accessing a table
   element = Stack::Element(L, 1);
   EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, HasField(314, IsString("pi"))),
+      EXPECT_THAT(element, HasField(314, IsString(StrEq("pi")))),
       R"(has field 314 which is string and is equal to "pi")");
 }
 

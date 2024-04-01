@@ -4,6 +4,8 @@
 #include "xdk/lua/stack.h"
 #include "gmock/gmock.h"
 
+#include <string_view>
+
 namespace xdk {
 namespace lua {
 
@@ -12,7 +14,7 @@ namespace lua {
 ::testing::Matcher<const Stack::Element &>
 IsNumber(const ::testing::Matcher<lua_Number> &matcher);
 ::testing::Matcher<const Stack::Element &>
-IsString(::testing::Matcher<absl::string_view> matcher);
+IsString(::testing::Matcher<std::string_view> matcher);
 ::testing::Matcher<const Stack::Element &> IsNil();
 
 ::testing::Matcher<const Stack::Element &>

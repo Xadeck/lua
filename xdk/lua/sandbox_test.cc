@@ -11,6 +11,7 @@ namespace {
 
 using ::testing::_;
 using ::testing::HasSubstr;
+using ::testing::StrEq;
 
 class SandboxTest : public testing::Test {
 protected:
@@ -159,7 +160,8 @@ TEST_F(SandboxTest, NewIndexCanBeUsedToControlAssignements) {
     lua_pushvalue(L, -2);
     lua_setupvalue(L, -2, 1);
     ASSERT_NE(lua_pcall(L, 0, 0, 0), 0);
-    ASSERT_THAT(Stack::Element(L, -1), IsString("Assignement not allowed"));
+    ASSERT_THAT(Stack::Element(L, -1),
+                IsString(StrEq("Assignement not allowed")));
     lua_pop(L, 2); // sandbox and error message.
   }
 }

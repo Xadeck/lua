@@ -10,6 +10,7 @@ namespace {
 using ::testing::_;
 using ::testing::HasSubstr;
 using ::testing::Not;
+using ::testing::StrEq;
 
 class IsStringTest : public ::testing::Test {
 protected:
@@ -20,8 +21,8 @@ TEST_F(IsStringTest, Success) {
   lua_pushstring(L, "blue sky");
 
   auto element = Stack::Element(L, -1);
-  EXPECT_THAT(element, Not(IsString("dark ground")));
-  EXPECT_THAT(element, IsString("blue sky"));
+  EXPECT_THAT(element, Not(IsString(StrEq("dark ground"))));
+  EXPECT_THAT(element, IsString(StrEq("blue sky")));
   EXPECT_THAT(element, Not(IsString(HasSubstr("ground"))));
   EXPECT_THAT(element, IsString(HasSubstr("sky")));
   EXPECT_THAT(element, IsString(_));
@@ -31,10 +32,10 @@ TEST_F(IsStringTest, Failure) {
 
   auto element = Stack::Element(L, -1);
   EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, IsString("dark ground")),
+      EXPECT_THAT(element, IsString(StrEq("dark ground"))),
       R"(Expected: is string and is equal to "dark ground")");
   EXPECT_NONFATAL_FAILURE(
-      EXPECT_THAT(element, Not(IsString("blue sky"))),
+      EXPECT_THAT(element, Not(IsString(StrEq("blue sky")))),
       R"(Expected: isn't string or isn't equal to "blue sky")");
   // Test that when the index is out of range, stack size is printed.
   element = Stack::Element(L, 2);
