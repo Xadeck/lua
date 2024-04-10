@@ -1,5 +1,5 @@
-#ifndef XDK_LUA_MATCHERS_ELEMENT_H
-#define XDK_LUA_MATCHERS_ELEMENT_H
+#ifndef XDK_LUA_MATCHERS_ELEMENT_H_
+#define XDK_LUA_MATCHERS_ELEMENT_H_
 
 #include "gmock/gmock.h"
 #include "xdk/lua/stack.h"
@@ -13,4 +13,4 @@ namespace lua {
 }
 }  // namespace xdk
 
-#endif
+#endif  // XDK_LUA_MATCHERS_ELEMENT_H_

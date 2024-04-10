@@ -1,5 +1,5 @@
-#ifndef XDK_RAWFIELD_H
-#define XDK_RAWFIELD_H
+#ifndef XDK_LUA_RAWFIELD_H_
+#define XDK_LUA_RAWFIELD_H_
 
 #include "xdk/lua/lua.hpp"
 
@@ -16,4 +16,4 @@ void rawsetfieldnumber(lua_State *L, int index, const char *k, lua_Number d);
 }  // namespace lua
 }  // namespace xdk
 
-#endif
+#endif  // XDK_LUA_RAWFIELD_H_

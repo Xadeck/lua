@@ -1,5 +1,5 @@
-#ifndef XDK_LUA_MATCHERS_IS_NIL_H
-#define XDK_LUA_MATCHERS_IS_NIL_H
+#ifndef XDK_LUA_MATCHERS_IS_NIL_H_
+#define XDK_LUA_MATCHERS_IS_NIL_H_
 
 #include "gmock/gmock.h"
 #include "xdk/lua/stack.h"
@@ -12,4 +12,4 @@ namespace lua {
 }  // namespace lua
 }  // namespace xdk
 
-#endif
+#endif  // XDK_LUA_MATCHERS_IS_NIL_H_

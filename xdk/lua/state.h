@@ -1,5 +1,5 @@
-#ifndef XDK_LUA_STATE_H
-#define XDK_LUA_STATE_H
+#ifndef XDK_LUA_STATE_H_
+#define XDK_LUA_STATE_H_
 
 #include <memory>
 
@@ -39,4 +39,4 @@ class State final {
 }  // namespace lua
 }  // namespace xdk
 
-#endif
+#endif  // XDK_LUA_STATE_H_

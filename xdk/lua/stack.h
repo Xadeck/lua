@@ -1,5 +1,5 @@
-#ifndef XDK_LUA_STACK_H
-#define XDK_LUA_STACK_H
+#ifndef XDK_LUA_STACK_H_
+#define XDK_LUA_STACK_H_
 
 #include <iostream>
 
@@ -26,4 +26,4 @@ std::ostream &operator<<(std::ostream &os, const Stack &stack);
 }  // namespace lua
 }  // namespace xdk
 
-#endif
+#endif  // XDK_LUA_STACK_H_

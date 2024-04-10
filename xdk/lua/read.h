@@ -1,5 +1,5 @@
-#ifndef XDK_LUA_READ_H
-#define XDK_LUA_READ_H
+#ifndef XDK_LUA_READ_H_
+#define XDK_LUA_READ_H_
 
 #include <string>
 
@@ -13,4 +13,4 @@ std::string Read(lua_Reader reader, lua_State *L, void *data);
 
 }  // namespace lua
 }  // namespace xdk
-#endif
+#endif  // XDK_LUA_READ_H_

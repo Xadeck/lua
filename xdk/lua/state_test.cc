@@ -1,5 +1,7 @@
 #include "xdk/lua/state.h"
 
+#include <utility>
+
 #include "gtest/gtest.h"
 
 namespace xdk {

@@ -1,5 +1,5 @@
-#ifndef XDK_LUA_STRING_VIEW_H
-#define XDK_LUA_STRING_VIEW_H
+#ifndef XDK_LUA_STRING_VIEW_H_
+#define XDK_LUA_STRING_VIEW_H_
 
 #include <string_view>
 
@@ -13,4 +13,4 @@ std::string_view tostring_view(lua_State *L, int index) noexcept;
 }  // namespace lua
 }  // namespace xdk
 
-#endif
+#endif  // XDK_LUA_STRING_VIEW_H_

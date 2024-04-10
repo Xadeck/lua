@@ -1,5 +1,5 @@
-#ifndef XDK_LUA_MATCHERS_H
-#define XDK_LUA_MATCHERS_H
+#ifndef XDK_LUA_MATCHERS_H_
+#define XDK_LUA_MATCHERS_H_
 
 #include <string_view>
 
@@ -26,4 +26,4 @@ namespace lua {
 }  // namespace lua
 }  // namespace xdk
 
-#endif
+#endif  // XDK_LUA_MATCHERS_H_

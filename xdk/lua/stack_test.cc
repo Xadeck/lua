@@ -1,5 +1,7 @@
 #include "xdk/lua/stack.h"
 
+#include <utility>
+
 #include "gtest/gtest.h"
 #include "xdk/lua/state.h"
 

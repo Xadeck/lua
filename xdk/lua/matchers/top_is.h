@@ -12,4 +12,4 @@ namespace lua {
 }  // namespace lua
 }  // namespace xdk
 
-#endif
+#endif  // XDK_LUA_MATCHERS_TOP_IS_H_

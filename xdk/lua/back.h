@@ -1,5 +1,5 @@
-#ifndef XDK_LUA_BACK_H
-#define XDK_LUA_BACK_H
+#ifndef XDK_LUA_BACK_H_
+#define XDK_LUA_BACK_H_
 
 #include "xdk/lua/lua.hpp"
 
@@ -18,4 +18,4 @@ void getback(lua_State *L, int index) noexcept;
 }  // namespace lua
 }  // namespace xdk
 
-#endif
+#endif  // XDK_LUA_BACK_H_

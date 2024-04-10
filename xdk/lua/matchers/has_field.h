@@ -16,4 +16,4 @@ namespace lua {
 }  // namespace lua
 }  // namespace xdk
 
-#endif
+#endif  // XDK_LUA_MATCHERS_HAS_FIELD_H_
